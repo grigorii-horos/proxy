@@ -1,9 +1,11 @@
 import anyproxy from "anyproxy";
-import { compress } from "./utils/compres.js";
+
 import { pipeBrotli } from "./pipes/brotli.js";
 import { pipeHeadersClean } from "./pipes/headersClean.js";
 import { pipeJpegImage } from "./pipes/jpegImage.js";
 import { pipeHtmlMin } from "./pipes/htmlMin.js";
+import { pipePngImage } from "./pipes/pngImage.js";
+import { pipeCache } from "./pipes/cache.js";
 
 const options = {
   port: 8001,
@@ -15,9 +17,12 @@ const options = {
       newResponse = await pipeHeadersClean(newResponse);
 
       newResponse = await pipeJpegImage(newResponse);
+      newResponse = await pipePngImage(newResponse);
+
       newResponse = await pipeHtmlMin(newResponse);
 
       newResponse = await pipeBrotli(newResponse);
+      newResponse = await pipeCache(newResponse);
 
       return { response: newResponse };
     },

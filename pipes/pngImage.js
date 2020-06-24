@@ -1,7 +1,7 @@
 import sharp from "sharp";
 
-export async function pipeJpegImage(response) {
-  if (response?.header["Content-Type"] === "image/jpeg") {
+export async function pipePngImage(response) {
+  if (response?.header["Content-Type"] === "image/png") {
     const oldSize = response.body.length;
     const image = sharp(response.body);
 
@@ -14,8 +14,9 @@ export async function pipeJpegImage(response) {
       return img
         .toFormat("webp", {
           lossless: false,
-          quality: 30,
-          reductionEffort: 1,
+          alphaQuality: 10,
+          quality: 40,
+          reductionEffort: 2,
         })
         .toBuffer();
     });
@@ -35,7 +36,7 @@ export async function pipeJpegImage(response) {
       body: newSize < oldSize ? newBody : response.body,
       header: {
         ...response.header,
-        "Content-Type": newSize < oldSize ? "image/webp" : "image/jpeg",
+        "Content-Type": newSize < oldSize ? "image/webp" : "image/png",
       },
     };
   }
