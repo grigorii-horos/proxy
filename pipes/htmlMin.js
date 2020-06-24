@@ -8,7 +8,7 @@ export async function pipeHtmlMin(response) {
     const bodyString = response.body.toString();
     const lines = (bodyString.match(/\n/g) || '').length + 1;
 
-    if (bodyString.length / lines > 200) {
+    if (bodyString.length / lines > 160) {
       return response;
     }
 
@@ -33,7 +33,7 @@ export async function pipeHtmlMin(response) {
       body: (newBody),
       header: {
         ...response.header,
-        'Content-Type': 'text/html',
+        'Content-Type': 'text/html;charset=utf-8',
       },
     };
   }
