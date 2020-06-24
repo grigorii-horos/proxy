@@ -30,7 +30,11 @@ export async function pipeHtmlMin(response) {
 
     return {
       ...response,
-      body: newBody,
+      body: (newBody),
+      header: {
+        ...response.header,
+        'Content-Type': 'text/html',
+      },
     };
   }
 

@@ -32,5 +32,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['Transfer-Encoding'];
   delete response?.header['Content-Length'];
 
+  response.header['Content-Length'] = '100';
+
   return response;
 }

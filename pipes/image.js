@@ -24,7 +24,7 @@ export async function pipeImage(response, request) {
       return img
         .toFormat('webp', {
           lossless: false,
-          quality: 1,
+          quality: 10,
           reductionEffort: 5,
         })
         .toBuffer();
