@@ -5,7 +5,7 @@ import { compress } from '../utils/compres.js';
  */
 export async function pipeBrotli(response) {
   if (response?.header['Content-Type']?.startsWith('text/html')) {
-    const newBody = await compress(response.body);
+    const newBody = await compress((response.body));
 
     return {
       ...response,

@@ -29,6 +29,8 @@ export async function pipeHeadersClean(response) {
   delete response?.header['X-Proxy-Upstream'];
   delete response?.header['X-Xss-Protection'];
   delete response?.header['X-Xss-Pwnage'];
+  delete response?.header['Transfer-Encoding'];
+  delete response?.header['Content-Length'];
 
   return response;
 }

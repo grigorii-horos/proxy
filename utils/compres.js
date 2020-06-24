@@ -1,8 +1,11 @@
-import { promisify } from "util";
-import zlib from "zlib";
+import { promisify } from 'util';
+import zlib from 'zlib';
 
 const brotliCompress = promisify(zlib.brotliCompress);
 
+/**
+ * @param data
+ */
 export function compress(data) {
   return brotliCompress(data, {
     params: {
