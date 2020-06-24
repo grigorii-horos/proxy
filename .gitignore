@@ -1,3 +1,8 @@
+.http-mitm-proxy
+!.http-mitm-proxy/keys/ca.private.key
+!.http-mitm-proxy/keys/ca.public.key
+!.http-mitm-proxy/certs/ca.pem
+
 # Logs
 logs
 *.log
