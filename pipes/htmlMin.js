@@ -1,9 +1,12 @@
-import minifier from "html-minifier";
+import minifier from 'html-minifier';
 
+/**
+ * @param response
+ */
 export async function pipeHtmlMin(response) {
-  if (response?.header["Content-Type"]?.startsWith("text/html")) {
+  if (response?.header['Content-Type']?.startsWith('text/html')) {
     const bodyString = response.body.toString();
-    const lines = (bodyString.match(/\n/g) || "").length + 1;
+    const lines = (bodyString.match(/\n/g) || '').length + 1;
 
     if (bodyString.length / lines > 160) {
       return response;

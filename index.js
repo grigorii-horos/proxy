@@ -1,41 +1,36 @@
-import anyproxy from "anyproxy";
-import mimeTypes from "mime-types";
-import xxhash from "xxhash";
-import fs from "fs";
-import path from "path";
+import anyproxy from 'anyproxy';
+import xxhash from 'xxhash';
+import fs from 'fs';
 
-import { promisify } from "util";
-import zlib from "zlib";
+import { promisify } from 'util';
+
+import { pipeBrotli } from './pipes/brotli.js';
+import { pipeHeadersClean } from './pipes/headersClean.js';
+import { pipeImage } from './pipes/image.js';
+import { pipeHtmlMin } from './pipes/htmlMin.js';
+import { pipeLosslessImage } from './pipes/losslessImage.js';
+import { pipeCache } from './pipes/cache.js';
 
 const fsExistsAsync = promisify(fs.exists);
 
 const readFile = promisify(fs.readFile);
 
-import { pipeBrotli } from "./pipes/brotli.js";
-import { pipeHeadersClean } from "./pipes/headersClean.js";
-import { pipeJpegImage } from "./pipes/jpegImage.js";
-import { pipeHtmlMin } from "./pipes/htmlMin.js";
-import { pipePngImage } from "./pipes/pngImage.js";
-import { pipeCache } from "./pipes/cache.js";
-
 const options = {
   port: 8001,
   rule: {
-    summary: "a rule to hack response",
+    summary: 'a rule to hack response',
     async beforeSendRequest(requestDetail) {
-      const cacheFile =
-        "/home/grisa/.caa/" +
-        xxhash.hash(Buffer.from(requestDetail.url), 0xcafebabe);
+      const cacheFile = `/home/grisa/.caa/${xxhash.hash(Buffer.from(requestDetail.url), 0xCAFEBABE)}`;
 
       if (await fsExistsAsync(cacheFile)) {
-        console.log("Get file from cache !!!!");
+        console.log('Get file from cache !!!!');
         return {
           response: {
             statusCode: 200,
             header: {
-              "Content-Type": (await readFile(cacheFile + ".mime"))
+              'Content-Type': (await readFile(`${cacheFile}.mime`))
                 .toString()
-                .replace(/(\r\n|\n|\r)/gm, ""),
+                .replace(/\n/gm, ''),
             },
             body: await readFile(cacheFile),
           },
@@ -49,8 +44,8 @@ const options = {
 
       newResponse = await pipeHeadersClean(newResponse, requestDetail);
 
-      newResponse = await pipeJpegImage(newResponse, requestDetail);
-      newResponse = await pipePngImage(newResponse, requestDetail);
+      newResponse = await pipeImage(newResponse, requestDetail);
+      newResponse = await pipeLosslessImage(newResponse, requestDetail);
 
       newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
@@ -71,10 +66,10 @@ const options = {
 };
 const proxyServer = new anyproxy.ProxyServer(options);
 
-proxyServer.on("ready", () => {
+proxyServer.on('ready', () => {
   /* */
 });
-proxyServer.on("error", (e) => {
+proxyServer.on('error', (e) => {
   /* */
 });
 proxyServer.start();

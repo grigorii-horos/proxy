@@ -1,7 +1,10 @@
-import { compress } from "../utils/compres.js";
+import { compress } from '../utils/compres.js';
 
+/**
+ * @param response
+ */
 export async function pipeBrotli(response) {
-  if (response?.header["Content-Type"]?.startsWith("text/html")) {
+  if (response?.header['Content-Type']?.startsWith('text/html')) {
     const newBody = await compress(response.body);
 
     return {
@@ -9,7 +12,7 @@ export async function pipeBrotli(response) {
       body: newBody,
       header: {
         ...response.header,
-        "Content-Encoding": "br",
+        'Content-Encoding': 'br',
       },
     };
   }

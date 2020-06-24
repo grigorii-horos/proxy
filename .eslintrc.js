@@ -56,5 +56,8 @@ module.exports = {
     'mocha/handle-done-callback': 0,
     'mocha/no-global-tests': 0,
     'mocha/valid-test-description': 0,
+    'import/no-cycle': 0,
+    'import/extensions': [2, 'always'],
+    'import/prefer-default-export': 0,
   },
 };
