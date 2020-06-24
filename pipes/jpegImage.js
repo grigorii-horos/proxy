@@ -20,7 +20,7 @@ export async function pipeJpegImage(response, request) {
       return img
         .toFormat("webp", {
           lossless: false,
-          quality: 30,
+          quality: 20,
           reductionEffort: 1,
         })
         .toBuffer();
