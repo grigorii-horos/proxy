@@ -4,7 +4,7 @@ import minifier from 'html-minifier';
  * @param response
  */
 export async function pipeHtmlMin(response) {
-  if (response?.header['Content-Type']?.startsWith('text/html') || response?.header['content-type']?.startsWith('text/html')) {
+  if (response?.header['Content-Type']?.startsWith('text/html')) {
     const bodyString = response.body.toString();
     const lines = (bodyString.match(/\n/g) || '').length + 1;
 
