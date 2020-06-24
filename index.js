@@ -4,7 +4,7 @@ import fs from 'fs';
 
 import { promisify } from 'util';
 
-import { pipeBrotli } from './pipes/brotli.js';
+import { pipeCompress } from './pipes/compress.js';
 import { pipeHeadersClean } from './pipes/headersClean.js';
 import { pipeImage } from './pipes/image.js';
 import { pipeHtmlMin } from './pipes/htmlMin.js';
@@ -36,6 +36,7 @@ const options = {
           },
         };
       }
+
       return requestDetail;
     },
 
@@ -49,7 +50,7 @@ const options = {
 
       newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
-      newResponse = await pipeBrotli(newResponse, requestDetail);
+      newResponse = await pipeCompress(newResponse, requestDetail);
       newResponse = await pipeCache(newResponse, requestDetail);
 
       return { response: newResponse };
