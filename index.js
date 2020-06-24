@@ -3,6 +3,7 @@ import { compress } from "./utils/compres.js";
 import { pipeBrotli } from "./pipes/brotli.js";
 import { pipeHeadersClean } from "./pipes/headersClean.js";
 import { pipeJpegImage } from "./pipes/jpegImage.js";
+import { pipeHtmlMin } from "./pipes/htmlMin.js";
 
 const options = {
   port: 8001,
@@ -14,6 +15,7 @@ const options = {
       newResponse = await pipeHeadersClean(newResponse);
 
       newResponse = await pipeJpegImage(newResponse);
+      newResponse = await pipeHtmlMin(newResponse);
 
       newResponse = await pipeBrotli(newResponse);
 
