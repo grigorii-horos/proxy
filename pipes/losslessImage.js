@@ -26,8 +26,8 @@ export async function pipeLosslessImage(response, request) {
         .toFormat('webp', {
           lossless: false,
           alphaQuality: 10,
-          quality: 40,
-          reductionEffort: 2,
+          quality: 10,
+          reductionEffort: 5,
         })
         .toBuffer();
     });
