@@ -12,11 +12,8 @@ export async function pipeHtmlMin(response) {
     const newBody = minifier.minify(bodyString, {
       collapseBooleanAttributes: true,
       removeAttributeQuotes: true,
-      removeRedundantAttributes: true,
       removeEmptyAttributes: true,
       removeComments: true,
-      removeCommentsFromCDATA: true,
-      removeCDATASectionsFromCDATA: true,
       collapseWhitespace: true,
       conservativeCollapse: true,
       continueOnParseError: true,
@@ -24,9 +21,10 @@ export async function pipeHtmlMin(response) {
       keepClosingSlash: false,
       minifyCSS: true,
       minifyJS: true,
-      sortAttributes: true,
-      sortClassName: true,
+      sortAttributes: false,
+      sortClassName: false,
     });
+
     return {
       ...response,
       body: newBody,

@@ -19,8 +19,10 @@
     "http-mitm-proxy": "^0.8.2",
     "iconv-lite": "^0.6.0",
     "imagemin": "^7.0.1",
+    "mime-types": "^2.1.27",
     "sharp": "^0.25.4",
     "uglify-js": "^3.10.0",
+    "xxhash": "^0.3.0",
     "zlib": "^1.0.5"
   },
   "devDependencies": {

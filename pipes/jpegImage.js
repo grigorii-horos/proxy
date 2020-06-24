@@ -1,6 +1,12 @@
 import sharp from "sharp";
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
+import xxhash from "xxhash";
 
-export async function pipeJpegImage(response) {
+const writeFile = promisify(fs.writeFile);
+
+export async function pipeJpegImage(response, request) {
   if (response?.header["Content-Type"] === "image/jpeg") {
     const oldSize = response.body.length;
     const image = sharp(response.body);
@@ -30,6 +36,15 @@ export async function pipeJpegImage(response) {
         " Compression - " +
         newSize / oldSize
     );
+
+    const cacheFile =
+      "/home/grisa/.caa/" + xxhash.hash(Buffer.from(request.url), 0xcafebabe);
+    await writeFile(cacheFile, newSize < oldSize ? newBody : response.body);
+    await writeFile(
+      cacheFile + ".mime",
+      newSize < oldSize ? "image/webp" : "image/jpeg"
+    );
+
     return {
       ...response,
       body: newSize < oldSize ? newBody : response.body,
