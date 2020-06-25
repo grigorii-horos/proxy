@@ -1,13 +1,18 @@
 import sharp from 'sharp';
 import prettyBytes from 'pretty-bytes';
 
+const imageMimeTypes = [
+  'image/jpeg',
+  'image/webp',
+];
+
 /**
  * @param response
  * @param request
  */
 export async function pipeImage(response, request) {
   if (
-    response?.header['Content-Type'] === 'image/jpeg'
+    imageMimeTypes.includes(response?.header['Content-Type'])
   ) {
     try {
       const oldSize = response.body.length;
