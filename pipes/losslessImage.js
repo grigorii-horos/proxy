@@ -27,7 +27,7 @@ export async function pipeLosslessImage(response, request) {
             lossless: false,
             alphaQuality: 50,
             quality: 75,
-            reductionEffort: 6,
+            reductionEffort: 4,
           })
           .toBuffer();
       });

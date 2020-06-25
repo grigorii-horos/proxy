@@ -12,6 +12,7 @@ import { pipeLosslessImage } from './pipes/losslessImage.js';
 import { pipeCache } from './pipes/cache.js';
 import blockUrls from './blockUrls.js';
 import { pipeSaveToCache } from './pipes/saveToCache.js';
+import { pipeSvg } from './pipes/svg.js';
 
 const fsExistsAsync = promisify(fs.exists);
 
@@ -75,6 +76,7 @@ const options = {
       newResponse = await pipeImage(newResponse, requestDetail);
       newResponse = await pipeLosslessImage(newResponse, requestDetail);
 
+      newResponse = await pipeSvg(newResponse, requestDetail);
       newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
       newResponse = await pipeCompress(newResponse, requestDetail);
