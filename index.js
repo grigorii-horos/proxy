@@ -39,9 +39,9 @@ const options = {
         0xCAFEBABE,
       )}`;
 
-      if (false && await fsExistsAsync(cacheFile)) {
-        console.log('Get file from cache !!!!');
-              const [contentType, contentEncoding] = (await readFile(`${cacheFile}.meta`)).toString().split('\n');
+      if (await fsExistsAsync(cacheFile)) {
+        console.log('Get file from cache ');
+        const [contentType, contentEncoding] = (await readFile(`${cacheFile}.meta`)).toString().split('\n');
 
         return {
           response: {
@@ -49,11 +49,15 @@ const options = {
             header: {
               'Content-Type': contentType,
               'Content-Encoding': contentEncoding,
+              'Cache-Control': 'public, immutable, max-age=31536000',
+              Expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
             },
             body: await readFile(cacheFile),
           },
         };
       }
+
+      // console.log('Download file ');
 
       return requestDetail;
     },
@@ -74,7 +78,7 @@ const options = {
 
       newResponse = await pipeCompress(newResponse, requestDetail);
       newResponse = await pipeSaveToCache(newResponse, requestDetail);
-      // newResponse = await pipeCache(newResponse, requestDetail);
+      newResponse = await pipeCache(newResponse, requestDetail);
 
       return { response: newResponse };
     },
