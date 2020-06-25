@@ -4,19 +4,18 @@ import minifier from 'html-minifier';
  * @param response
  */
 export async function pipeHtmlMin(response) {
-  if (response?.header['Content-Type']?.startsWith('text/html')) {
+  if (
+    response?.header['Content-Type']?.startsWith('text/html')
+  ) {
     const bodyString = response.body.toString();
     const lines = (bodyString.match(/\n/g) || '').length + 1;
 
-    if (bodyString.length / lines > 160) {
+    if (bodyString.length / lines > 240) {
       return response;
     }
 
     const newBody = minifier.minify(bodyString, {
       collapseBooleanAttributes: true,
-      removeAttributeQuotes: true,
-      removeEmptyAttributes: true,
-      removeComments: true,
       collapseWhitespace: true,
       conservativeCollapse: true,
       continueOnParseError: true,
@@ -24,6 +23,9 @@ export async function pipeHtmlMin(response) {
       keepClosingSlash: false,
       minifyCSS: true,
       minifyJS: true,
+      removeAttributeQuotes: true,
+      removeComments: true,
+      removeEmptyAttributes: true,
       sortAttributes: false,
       sortClassName: false,
     });

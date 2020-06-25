@@ -22,7 +22,8 @@ const options = {
   rule: {
     summary: 'a rule to hack response',
     async beforeSendRequest(requestDetail) {
-      if (blockUrls.filter((url) => requestDetail.url.startsWith(`https://${url}`)).length || blockUrls.filter((url) => requestDetail.url.startsWith(`http://${url}`)).length) {
+      if (blockUrls.filter((url) => requestDetail.url.startsWith(`https://${url}`)).length > 0
+        || blockUrls.filter((url) => requestDetail.url.startsWith(`http://${url}`)).length > 0) {
         return {
           response: {
             statusCode: 404,

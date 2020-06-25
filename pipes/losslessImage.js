@@ -1,9 +1,11 @@
 import sharp from 'sharp';
-import fs from 'fs';
-import { promisify } from 'util';
 import prettyBytes from 'pretty-bytes';
 
-const losslessMimeTypes = ['image/png', 'image/gif'];
+const losslessMimeTypes = [
+  'image/png',
+  'image/gif',
+];
+
 /**
  * @param response
  * @param request
@@ -38,15 +40,20 @@ export async function pipeLosslessImage(response, request) {
         } New - ${
           prettyBytes(newSize)
         } Compression - ${
-          parseInt(`${(100 * newSize) / oldSize}`, 10)}%`,
+          Math.floor((100 * newSize) / oldSize)
+        }%`,
       );
 
       return {
         ...response,
-        body: newSize < oldSize ? newBody : response.body,
+        body: newSize < oldSize
+          ? newBody
+          : response.body,
         header: {
           ...response.header,
-          'Content-Type': newSize < oldSize ? 'image/webp' : 'image/png',
+          'Content-Type': newSize < oldSize
+            ? 'image/webp'
+            : response.header['Content-Type'],
         },
       };
     } catch (error) {

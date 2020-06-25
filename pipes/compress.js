@@ -7,13 +7,14 @@ const compressMimeTypes = [
   'text/',
   'image/',
 ];
+
 /**
  * @param response
  * @param request
  */
 export async function pipeCompress(response, request) {
   if (
-    compressMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length
+    compressMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0
   ) {
     const [encoding, compressedBody] = await Promise.all(
       compress(response.body, request.protocol),

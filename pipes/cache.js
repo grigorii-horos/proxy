@@ -1,12 +1,10 @@
-import cacheControl from '@tusbar/cache-control';
-
 const alwaysCache = [
   'application/',
   'audio/',
   'video/',
-
   'font/',
   'image/',
+
   'text/javascript',
   'text/css',
   'text/plain',
@@ -18,12 +16,8 @@ const alwaysCache = [
 export async function pipeCache(response) {
   if (
     response?.header['Content-Type']
-    && alwaysCache.filter((mime) => response?.header['Content-Type'].startsWith(mime)).length
+    && alwaysCache.filter((mime) => response?.header['Content-Type'].startsWith(mime)).length > 0
   ) {
-    const opt = cacheControl.parse(response?.header['Cache-Control']);
-
-    delete response?.header.Expires;
-
     return {
       ...response,
       header: {

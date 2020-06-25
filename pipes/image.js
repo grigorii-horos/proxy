@@ -1,7 +1,4 @@
 import sharp from 'sharp';
-import fs from 'fs';
-import { promisify } from 'util';
-import xxhash from 'xxhash';
 import prettyBytes from 'pretty-bytes';
 
 /**
@@ -9,25 +6,26 @@ import prettyBytes from 'pretty-bytes';
  * @param request
  */
 export async function pipeImage(response, request) {
-  if (response?.header['Content-Type'] === 'image/jpeg') {
+  if (
+    response?.header['Content-Type'] === 'image/jpeg'
+  ) {
     try {
       const oldSize = response.body.length;
-      const image = sharp(response.body);
+      let image = sharp(response.body);
 
-      const newBody = await image.metadata().then((metadata) => {
-        let img = image;
-        if (metadata.width * metadata.height > 1000000) {
-          img = img.resize(Math.round(metadata.width / 2));
-        }
+      const metadata = await image.metadata();
 
-        return img
-          .toFormat('webp', {
-            lossless: false,
-            quality: 75,
-            reductionEffort: 6,
-          })
-          .toBuffer();
-      });
+      if (metadata.width * metadata.height > 1000000) {
+        image = image.resize(Math.round(metadata.width / 2));
+      }
+
+      const newBody = await image
+        .toFormat('webp', {
+          lossless: false,
+          quality: 75,
+          reductionEffort: 6,
+        })
+        .toBuffer();
 
       const newSize = newBody.length;
 
@@ -37,7 +35,8 @@ export async function pipeImage(response, request) {
         } New - ${
           prettyBytes(newSize)
         } Compression - ${
-          parseInt(`${(100 * newSize) / oldSize}`, 10)}%`,
+          Math.floor((100 * newSize) / oldSize)
+        }%`,
       );
 
       return {
@@ -45,7 +44,7 @@ export async function pipeImage(response, request) {
         body: newSize < oldSize ? newBody : response.body,
         header: {
           ...response.header,
-          'Content-Type': newSize < oldSize ? 'image/webp' : 'image/jpeg',
+          'Content-Type': newSize < oldSize ? 'image/webp' : response.header['Content-Type'],
         },
       };
     } catch (error) {
