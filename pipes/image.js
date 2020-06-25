@@ -27,8 +27,8 @@ export async function pipeImage(response, request) {
       const newBody = await image
         .toFormat('webp', {
           lossless: false,
-          quality: 70,
-          reductionEffort: 4,
+          quality: 60,
+          reductionEffort: 5,
         })
         .toBuffer();
 
