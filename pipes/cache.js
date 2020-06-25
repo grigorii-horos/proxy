@@ -1,26 +1,15 @@
 import cacheControl from '@tusbar/cache-control';
 
 const alwaysCache = [
-  'application/javascript',
-  'application/json',
-  'application/ld+json',
-  'application/pdf',
-  'audio/aac',
-  'audio/webm',
-  'font/otf',
-  'font/ttf',
-  'font/woff2',
-  'image/bmp',
-  'image/gif',
-  'image/jpeg',
-  'image/png',
-  'image/svg+xml',
-  'image/vnd.microsoft.icon',
-  'image/webp',
+  'application/',
+  'audio/',
+  'video/',
+
+  'font/',
+  'image/',
   'text/javascript',
   'text/css',
   'text/plain',
-  'video/webm',
 ];
 
 /**
@@ -29,7 +18,7 @@ const alwaysCache = [
 export async function pipeCache(response) {
   if (
     response?.header['Content-Type']
-    && alwaysCache.includes(response?.header['Content-Type'].split(';')[0])
+    && alwaysCache.filter((mime) => response?.header['Content-Type'].startsWith(mime)).length
   ) {
     const opt = cacheControl.parse(response?.header['Cache-Control']);
 
@@ -40,6 +29,7 @@ export async function pipeCache(response) {
       header: {
         ...response.header,
         'Cache-Control': 'public, immutable, max-age=31536000',
+        Expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
       },
     };
   }

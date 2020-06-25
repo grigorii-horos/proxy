@@ -10,6 +10,8 @@ import { pipeImage } from './pipes/image.js';
 import { pipeHtmlMin } from './pipes/htmlMin.js';
 import { pipeLosslessImage } from './pipes/losslessImage.js';
 import { pipeCache } from './pipes/cache.js';
+import blockUrls from './blockUrls.js';
+import { pipeSaveToCache } from './pipes/saveToCache.js';
 
 const fsExistsAsync = promisify(fs.exists);
 
@@ -20,17 +22,33 @@ const options = {
   rule: {
     summary: 'a rule to hack response',
     async beforeSendRequest(requestDetail) {
-      const cacheFile = `/home/grisa/.caa/${xxhash.hash(Buffer.from(requestDetail.url), 0xCAFEBABE)}`;
+      if (blockUrls.filter((url) => requestDetail.url.startsWith(`https://${url}`)).length || blockUrls.filter((url) => requestDetail.url.startsWith(`http://${url}`)).length) {
+        return {
+          response: {
+            statusCode: 404,
+            header: {
+              'Content-Type': 'text/plain',
+            },
+            body: 'Not Found',
+          },
+        };
+      }
 
-      if (await fsExistsAsync(cacheFile)) {
+      const cacheFile = `/home/grisa/.caa/${xxhash.hash(
+        Buffer.from(requestDetail.url),
+        0xCAFEBABE,
+      )}`;
+
+      if (false && await fsExistsAsync(cacheFile)) {
         console.log('Get file from cache !!!!');
+              const [contentType, contentEncoding] = (await readFile(`${cacheFile}.meta`)).toString().split('\n');
+
         return {
           response: {
             statusCode: 200,
             header: {
-              'Content-Type': (await readFile(`${cacheFile}.mime`))
-                .toString()
-                .replace(/\n/gm, ''),
+              'Content-Type': contentType,
+              'Content-Encoding': contentEncoding,
             },
             body: await readFile(cacheFile),
           },
@@ -42,16 +60,21 @@ const options = {
 
     async beforeSendResponse(requestDetail, responseDetail) {
       let newResponse = responseDetail.response;
+      // console.log(' ------------- ');
+      // console.log('Request Url', requestDetail.url);
+      // console.log('Request Header', requestDetail.requestOptions.headers);
+      // console.log('Response Header', Object.keys(newResponse));
+      // console.log(' ------------- ');
 
       newResponse = await pipeHeadersClean(newResponse, requestDetail);
-
       newResponse = await pipeImage(newResponse, requestDetail);
       newResponse = await pipeLosslessImage(newResponse, requestDetail);
 
       newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
       newResponse = await pipeCompress(newResponse, requestDetail);
-      newResponse = await pipeCache(newResponse, requestDetail);
+      newResponse = await pipeSaveToCache(newResponse, requestDetail);
+      // newResponse = await pipeCache(newResponse, requestDetail);
 
       return { response: newResponse };
     },
@@ -63,7 +86,7 @@ const options = {
   throttle: 0,
   forceProxyHttps: true,
   wsIntercept: false,
-  silent: false,
+  silent: true,
 };
 const proxyServer = new anyproxy.ProxyServer(options);
 

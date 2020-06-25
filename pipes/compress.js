@@ -1,32 +1,30 @@
-import { compress, compressGz } from '../utils/compres.js';
+import { compress } from '../utils/compres.js';
 
+const compressMimeTypes = [
+  'application/javascript',
+  'application/json',
+  'application/ld+json',
+  'text/',
+  'image/',
+];
 /**
  * @param response
  * @param request
  */
 export async function pipeCompress(response, request) {
-  if (request.protocol === 'http') {
-    const newBody = await compressGz((response.body));
+  if (
+    compressMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length
+  ) {
+    const [encoding, compressedBody] = await Promise.all(
+      compress(response.body, request.protocol),
+    );
 
     return {
       ...response,
-      body: newBody,
+      body: compressedBody,
       header: {
         ...response.header,
-        'Content-Encoding': 'gzip',
-      },
-    };
-  }
-
-  if (response?.header['Content-Type']?.startsWith('text/html')) {
-    const newBody = await compress((response.body));
-
-    return {
-      ...response,
-      body: newBody,
-      header: {
-        ...response.header,
-        'Content-Encoding': 'br',
+        'Content-Encoding': encoding,
       },
     };
   }
