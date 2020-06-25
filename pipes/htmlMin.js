@@ -1,5 +1,5 @@
 import minifier from 'html-minifier';
-
+import replaceAll from 'string.prototype.replaceall';
 /**
  * @param response
  */
@@ -7,12 +7,16 @@ export async function pipeHtmlMin(response) {
   if (
     response?.header['Content-Type']?.startsWith('text/html')
   ) {
-    const bodyString = response.body.toString();
+    let bodyString = response.body.toString();
     const lines = (bodyString.match(/\n/g) || '').length + 1;
 
     if (bodyString.length / lines > 240) {
       return response;
     }
+
+    // bodyString = bodyString.toString();
+    bodyString = replaceAll(bodyString, '<img', '<img loading="lazy"');
+    bodyString = replaceAll(bodyString, '<iframe', '<iframe loading="lazy"');
 
     const newBody = minifier.minify(bodyString, {
       collapseBooleanAttributes: true,
