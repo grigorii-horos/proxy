@@ -1,24 +1,31 @@
 import minifier from 'html-minifier';
 import replaceAll from 'string.prototype.replaceall';
+import charset from 'charset';
+
+import iconv from 'iconv-lite';
+
 /**
  * @param response
+ * @param request
  */
-export async function pipeHtmlMin(response) {
+export async function pipeHtmlMin(response, request) {
   if (
     response?.header['Content-Type']?.startsWith('text/html')
   ) {
-    let bodyString = response.body.toString();
-    const lines = (bodyString.match(/\n/g) || '').length + 1;
+    let bodyString = response.body;
+    const lines = (bodyString.toString().match(/\n/g) || '').length + 1;
+
+    const charsetDetect = charset(response?.header['Content-Type']);
+    bodyString = iconv.decode(Buffer.from(bodyString), charsetDetect);
 
     if (bodyString.length / lines > 240) {
       return response;
     }
 
-    // bodyString = bodyString.toString();
     bodyString = replaceAll(bodyString, '<img', '<img loading="lazy"');
     bodyString = replaceAll(bodyString, '<iframe', '<iframe loading="lazy"');
 
-    const newBody = minifier.minify(bodyString, {
+    bodyString = minifier.minify(bodyString, {
       collapseBooleanAttributes: true,
       collapseWhitespace: true,
       conservativeCollapse: true,
@@ -36,7 +43,7 @@ export async function pipeHtmlMin(response) {
 
     return {
       ...response,
-      body: (newBody),
+      body: bodyString,
       header: {
         ...response.header,
         'Content-Type': 'text/html;charset=utf-8',
