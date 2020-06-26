@@ -16,7 +16,9 @@ export async function pipeHtmlMin(response, request) {
     const lines = (bodyString.toString().match(/\n/g) || '').length + 1;
 
     const charsetDetect = charset(response?.header['Content-Type']);
-    bodyString = iconv.decode(Buffer.from(bodyString), charsetDetect);
+    if (charsetDetect && charsetDetect !== 'utf-8') {
+      bodyString = iconv.decode(Buffer.from(bodyString), charsetDetect);
+    }
 
     if (bodyString.length / lines > 240) {
       return response;
