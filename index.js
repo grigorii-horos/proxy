@@ -76,7 +76,7 @@ const options = {
       newResponse = await pipeImage(newResponse, requestDetail);
       newResponse = await pipeLosslessImage(newResponse, requestDetail);
 
-      newResponse = await pipeSvg(newResponse, requestDetail);
+      // newResponse = await pipeSvg(newResponse, requestDetail);
       newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
       newResponse = await pipeCompress(newResponse, requestDetail);
