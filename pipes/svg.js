@@ -1,5 +1,11 @@
 import Svgo from 'svgo';
 import prettyBytes from 'pretty-bytes';
+import tempWrite from 'temp-write';
+import execa from 'execa';
+import fs from 'fs';
+import { promisify } from 'util';
+
+const readFile = promisify(fs.readFile);
 
 const svgo = new Svgo({
 
@@ -14,10 +20,14 @@ export async function pipeSvg(response, request) {
     response?.header['Content-Type']?.startsWith('image/svg+xml')
   ) {
     const oldSize = response.body.length;
-    try {
-      const svg = await svgo.optimize(response.body);
-      const newSize = svg.data.length;
+    const filePath = await tempWrite(response.body, 'img.svg');
 
+    try {
+      const data = await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
+
+      const newB = await readFile(`${filePath}.tmp.svg`);
+
+      const newSize = newB.length;
       console.log(
         `Compres Image: Old - ${
           prettyBytes(oldSize)
@@ -28,13 +38,9 @@ export async function pipeSvg(response, request) {
         }%`,
       );
 
-      if (svg.data.length < 10) {
-        return response;
-      }
-
       return {
         ...response,
-        body: svg.data,
+        body: newB,
       };
     } catch (error) {
       return response;

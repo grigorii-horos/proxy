@@ -21,7 +21,7 @@ export async function pipeSaveToCache(response, request) {
   if (
     response?.statusCode === 200
     && cacheMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0
-    && request.requestOptions.method !== 'GET'
+    && request.requestOptions.method === 'GET'
   ) {
     const hashFile = xxhash.hash(
       Buffer.from(request.url),
@@ -43,6 +43,8 @@ export async function pipeSaveToCache(response, request) {
     await Promise.all([writeBody, writeMeta]);
 
     await fsRename(`${cacheFile}.tmp`, cacheFile);
+
+    console.log('Save to cache', cacheFile);
     return {
       ...response,
       header: {
