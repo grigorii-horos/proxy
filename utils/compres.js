@@ -1,34 +1,28 @@
-import { promisify } from "util";
-import zlib from "zlib";
+import { Worker } from 'worker_threads';
 
-const brotliCompress = promisify(zlib.brotliCompress);
-const gzCompress = promisify(zlib.gzip);
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+// @ts-ignore
+const __dirname = dirname(fileURLToPath(import.meta.url));// eslint-disable-line no-underscore-dangle,max-len
 
 /**
  * @param data
+ * @param protocol
  */
-export function compress(data, protocol) {
-  if (protocol === "http") {
-    return [
-      "gzip",
-      // @ts-ignore
-      gzCompress(data, {
-        level: 6,
-      }),
-    ];
-  }
+export async function compress(data, protocol) {
+  if (protocol === 'http') {
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(`${__dirname}/compressWorkerGz.js`);
 
-  return [
-    "br",
-    // @ts-ignore
-    brotliCompress(data, {
-      chunkSize: 32 * 1024,
-      params: {
-        [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-        [zlib.constants.BROTLI_PARAM_QUALITY]: 1,
-        // @ts-ignore
-        [zlib.constants.BROTLI_PARAM_SIZE_HINT]: data.length,
-      },
-    }),
-  ];
+      worker.on('message', (message) => resolve(['gzip', Buffer.from(message.data)]));
+      worker.postMessage((data));
+    });
+  }
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(`${__dirname}/compressWorkerBr.js`);
+
+    worker.on('message', (message) => resolve(['br', Buffer.from(message.data)]));
+    worker.postMessage((data));
+  });
 }

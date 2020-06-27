@@ -22,6 +22,7 @@ export async function pipeSaveToCache(response, request) {
     response?.statusCode === 200
     && cacheMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0
     && request.requestOptions.method === 'GET'
+    && response.body.length > 8 * 1024
   ) {
     const hashFile = xxhash.hash(
       Buffer.from(request.url),
