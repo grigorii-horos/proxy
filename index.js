@@ -23,8 +23,9 @@ const options = {
   rule: {
     summary: 'a rule to hack response',
     async beforeSendRequest(requestDetail) {
-      if (blockUrls.filter((url) => requestDetail.url.startsWith(`https://${url}`)).length > 0
-        || blockUrls.filter((url) => requestDetail.url.startsWith(`http://${url}`)).length > 0) {
+      if (
+        blockUrls.filter((url) => requestDetail.requestOptions.hostname.startsWith(url)).length > 0
+      ) {
         return {
           response: {
             statusCode: 404,
@@ -36,14 +37,33 @@ const options = {
         };
       }
 
-      const cacheFile = `/home/grisa/.caa/${xxhash.hash(
+      if (requestDetail.requestOptions.method !== 'GET') {
+        return requestDetail;
+      }
+
+      const hashFile = xxhash.hash(
         Buffer.from(requestDetail.url),
         0xCAFEBABE,
-      )}`;
+      );
+
+      const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
       if (await fsExistsAsync(cacheFile)) {
-        console.log('Get file from cache ');
         const [contentType, contentEncoding] = (await readFile(`${cacheFile}.meta`)).toString().split('\n');
+        console.log('File in cache', cacheFile);
+
+        if (requestDetail && requestDetail.header && requestDetail.header['If-None-Match']) {
+          console.log(requestDetail.header['If-None-Match']);
+        }
+        if (requestDetail.header && requestDetail.header['If-None-Match'] && `"${hashFile}"` === requestDetail?.header['If-None-Match']) {
+          console.log('ETag detect');
+          return {
+            response: {
+              statusCode: 304,
+              body: '',
+            },
+          };
+        }
 
         return {
           response: {
@@ -53,24 +73,18 @@ const options = {
               'Content-Encoding': contentEncoding,
               'Cache-Control': 'public, immutable, max-age=31536000',
               Expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
+              ETag: `"${hashFile}"`,
             },
             body: await readFile(cacheFile),
           },
         };
       }
 
-      // console.log('Download file ');
-
       return requestDetail;
     },
 
     async beforeSendResponse(requestDetail, responseDetail) {
       let newResponse = responseDetail.response;
-      // console.log(' ------------- ');
-      // console.log('Request Url', requestDetail.url);
-      // console.log('Request Header', requestDetail.requestOptions.headers);
-      // console.log('Response Header', Object.keys(newResponse));
-      // console.log(' ------------- ');
 
       newResponse = await pipeHeadersClean(newResponse, requestDetail);
       newResponse = await pipeImage(newResponse, requestDetail);

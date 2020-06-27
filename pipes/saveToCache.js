@@ -18,9 +18,17 @@ const cacheMimeTypes = [
  * @param request
  */
 export async function pipeSaveToCache(response, request) {
-  if (response?.statusCode === 200
-    && cacheMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0) {
-    const cacheFile = `/home/grisa/.caa/${xxhash.hash(Buffer.from(request.url), 0xCAFEBABE)}`;
+  if (
+    response?.statusCode === 200
+    && cacheMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0
+    && request.requestOptions.method !== 'GET'
+  ) {
+    const hashFile = xxhash.hash(
+      Buffer.from(request.url),
+      0xCAFEBABE,
+    );
+
+    const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
     const writeBody = writeFile(`${cacheFile}.tmp`, response.body);
     const writeMeta = writeFile(
@@ -35,6 +43,13 @@ export async function pipeSaveToCache(response, request) {
     await Promise.all([writeBody, writeMeta]);
 
     await fsRename(`${cacheFile}.tmp`, cacheFile);
+    return {
+      ...response,
+      header: {
+        ...response.header,
+        ETag: `"${hashFile}"`,
+      },
+    };
   }
 
   return response;
