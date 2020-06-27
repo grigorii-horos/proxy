@@ -1,6 +1,8 @@
 import sharp from 'sharp';
 import prettyBytes from 'pretty-bytes';
 
+import { imageFn } from '../utils/image.js';
+
 const imageMimeTypes = [
   'image/jpeg',
   'image/webp',
@@ -14,47 +16,34 @@ export async function pipeImage(response, request) {
   if (
     imageMimeTypes.includes(response?.header['Content-Type'])
   ) {
-    try {
-      const oldSize = response.body.length;
-      let image = sharp(response.body);
+    // try {
+    const oldSize = response.body.length;
 
-      const metadata = await image.metadata();
+    const newBody = await imageFn(response.body);
 
-      if (metadata.width * metadata.height > 1000000) {
-        image = image.resize(Math.round(metadata.width / 2));
-      }
+    const newSize = newBody.length;
 
-      const newBody = await image
-        .toFormat('webp', {
-          lossless: false,
-          quality: 60,
-          reductionEffort: 5,
-        })
-        .toBuffer();
+    console.log(
+      `Compres Image: Old - ${
+        prettyBytes(oldSize)
+      } New - ${
+        prettyBytes(newSize)
+      } Compression - ${
+        Math.floor((100 * newSize) / oldSize)
+      }%`,
+    );
 
-      const newSize = newBody.length;
-
-      console.log(
-        `Compres Image: Old - ${
-          prettyBytes(oldSize)
-        } New - ${
-          prettyBytes(newSize)
-        } Compression - ${
-          Math.floor((100 * newSize) / oldSize)
-        }%`,
-      );
-
-      return {
-        ...response,
-        body: newSize < oldSize ? newBody : response.body,
-        header: {
-          ...response.header,
-          'Content-Type': newSize < oldSize ? 'image/webp' : response.header['Content-Type'],
-        },
-      };
-    } catch (error) {
-      return response;
-    }
+    return {
+      ...response,
+      body: newSize < oldSize ? newBody : response.body,
+      header: {
+        ...response.header,
+        'Content-Type': newSize < oldSize ? 'image/webp' : response.header['Content-Type'],
+      },
+    };
+    // } catch (error) {
+    //   return response;
+    // }
   }
 
   return response;
