@@ -23,10 +23,6 @@ export async function pipeHtmlMin(response, request) {
     return {
       ...response,
       body: bodyString,
-      header: {
-        ...response.header,
-        'content-type': 'text/html;charset=utf-8',
-      },
     };
   }
 
