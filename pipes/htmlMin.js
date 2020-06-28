@@ -23,7 +23,7 @@ export async function pipeHtmlMin(response, request) {
       return response;
     }
 
-    bodyString = minHtmlFn(bodyString);
+    bodyString = await minHtmlFn(bodyString);
 
     return {
       ...response,
