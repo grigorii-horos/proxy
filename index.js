@@ -43,7 +43,7 @@ const options = {
         return requestDetail;
       }
 
-      const headers = lowercaseKeys(requestDetail.header);
+      const headers = lowercaseKeys(requestDetail.header || {});
 
       const hashFile = xxhash.hash(
         Buffer.from(requestDetail.url),
