@@ -4,9 +4,9 @@ import iconv from 'iconv-lite';
 import { charsetFn } from '../utils/charset.js';
 
 const convertCharsetMimes = [
-  'text/html',
-  'text/javascript',
-  'text/css',
+  'text/',
+  'application/javascript',
+  'application/json',
 ];
 /**
  * @param response
