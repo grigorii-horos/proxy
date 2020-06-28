@@ -24,7 +24,7 @@ export async function pipeSaveToCache(response, request) {
     && request.requestOptions.method === 'GET'
     && response.body.length > 8 * 1024
   ) {
-    const hashFile = crypto.createHash('sha1').update(request.url).digest('base64');
+    const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
 

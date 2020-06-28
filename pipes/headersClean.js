@@ -24,7 +24,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['last-modified'];
   delete response?.header['public-key-pins'];
   delete response?.header['report-to'];
-  delete response?.header['transfer-encoding'];
+  // delete response?.header['transfer-encoding'];
   delete response?.header['x-anyproxy-origin-connection'];
   delete response?.header['x-anyproxy-origin-connection'];
   delete response?.header['x-anyproxy-origin-content-encoding'];

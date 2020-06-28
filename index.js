@@ -45,7 +45,7 @@ const options = {
 
       const headers = lowercaseKeys(requestDetail.header || {});
 
-      const hashFile = crypto.createHash('sha1').update(requestDetail.url).digest('base64');
+      const hashFile = crypto.createHash('sha1').update(requestDetail.url).digest('hex');
 
       const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
