@@ -3,8 +3,15 @@ import { parentPort } from 'worker_threads';
 import charset from 'charset';
 import iconv from 'iconv-lite';
 
-parentPort.once('message', async ([data, charsetData]) => {
-  const bodyString = iconv.decode(data, charsetData);
+parentPort.once('message', async ([data, header]) => {
+  const charsetDetect = charset(header);
+
+  let bodyString;
+  if (charsetDetect && charsetDetect !== 'utf-8') {
+    bodyString = iconv.decode(data, charsetDetect);
+  } else {
+    bodyString = data;
+  }
 
   parentPort.postMessage({
   // @ts-ignore

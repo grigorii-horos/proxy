@@ -1,5 +1,4 @@
 import charset from 'charset';
-import iconv from 'iconv-lite';
 
 import { charsetFn } from '../utils/charset.js';
 
@@ -16,12 +15,7 @@ export async function pipeCharset(response, request) {
   if (
     convertCharsetMimes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
   ) {
-    let bodyString = response.body;
-
-    const charsetDetect = charset(response?.header['content-type']);
-    if (charsetDetect && charsetDetect !== 'utf-8') {
-      bodyString = await charsetFn(bodyString, charsetDetect);
-    }
+    const bodyString = await charsetFn(response.body, response?.header['content-type']);
 
     return {
       ...response,
