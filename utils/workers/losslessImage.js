@@ -13,8 +13,8 @@ parentPort.once('message', async (data) => {
   const newBody = await image
     .toFormat('webp', {
       lossless: false,
-      quality: 60,
-      reductionEffort: 5,
+      quality: 70,
+      reductionEffort: 4,
     })
     .toBuffer();
 

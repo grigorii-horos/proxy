@@ -94,8 +94,8 @@ const options = {
       newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
       newResponse = await pipeCompress(newResponse, requestDetail);
-      newResponse = await pipeSaveToCache(newResponse, requestDetail);
-      newResponse = await pipeCache(newResponse, requestDetail);
+      // newResponse = await pipeSaveToCache(newResponse, requestDetail);
+      // newResponse = await pipeCache(newResponse, requestDetail);
 
       return { response: newResponse };
     },

@@ -13,14 +13,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));// eslint-disable-line
 export async function compress(data, protocol) {
   if (protocol === 'http') {
     return new Promise((resolve, reject) => {
-      const worker = new Worker(`${__dirname}/compressWorkerGz.js`);
+      const worker = new Worker(`${__dirname}/workers/compressGz.js`);
 
       worker.on('message', (message) => resolve(['gzip', Buffer.from(message.data)]));
       worker.postMessage((data));
     });
   }
   return new Promise((resolve, reject) => {
-    const worker = new Worker(`${__dirname}/compressWorkerBr.js`);
+    const worker = new Worker(`${__dirname}/workers/compressBr.js`);
 
     worker.on('message', (message) => resolve(['br', Buffer.from(message.data)]));
     worker.postMessage((data));
