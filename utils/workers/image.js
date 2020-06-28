@@ -6,7 +6,9 @@ parentPort.once('message', async (data) => {
 
   const metadata = await image.metadata();
 
-  if (metadata.width * metadata.height > 1000000) {
+  if (metadata.width > 1500) {
+    image = image.resize(Math.round(metadata.width / 1.5));
+  } else if (metadata.width > 2500) {
     image = image.resize(Math.round(metadata.width / 2));
   }
 
