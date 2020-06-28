@@ -4,6 +4,7 @@ import fs from 'fs';
 
 import { promisify } from 'util';
 
+import lowercaseKeys from 'lowercase-keys';
 import { pipeCompress } from './pipes/compress.js';
 import { pipeHeadersClean } from './pipes/headersClean.js';
 import { pipeImage } from './pipes/image.js';
@@ -13,6 +14,7 @@ import { pipeCache } from './pipes/cache.js';
 import blockUrls from './blockUrls.js';
 import { pipeSaveToCache } from './pipes/saveToCache.js';
 import { pipeSvg } from './pipes/svg.js';
+import { pipeLovercaseHeader } from './pipes/lovercaseHeaders.js';
 
 const fsExistsAsync = promisify(fs.exists);
 
@@ -30,7 +32,7 @@ const options = {
           response: {
             statusCode: 404,
             header: {
-              'Content-Type': 'text/plain',
+              'content-type': 'text/plain',
             },
             body: 'Not Found',
           },
@@ -40,6 +42,8 @@ const options = {
       if (requestDetail.requestOptions.method !== 'GET') {
         return requestDetail;
       }
+
+      const headers = lowercaseKeys(requestDetail.header);
 
       const hashFile = xxhash.hash(
         Buffer.from(requestDetail.url),
@@ -52,10 +56,7 @@ const options = {
         const [contentType, contentEncoding] = (await readFile(`${cacheFile}.meta`)).toString().split('\n');
         console.log('File in cache', cacheFile);
 
-        if (requestDetail && requestDetail.header && requestDetail.header['If-None-Match']) {
-          console.log(requestDetail.header['If-None-Match']);
-        }
-        if (requestDetail.header && requestDetail.header['If-None-Match'] && `"${hashFile}"` === requestDetail?.header['If-None-Match']) {
+        if (headers['if-none-match'] && `"${hashFile}"` === headers['if-none-match']) {
           console.log('ETag detect');
           return {
             response: {
@@ -69,11 +70,11 @@ const options = {
           response: {
             statusCode: 200,
             header: {
-              'Content-Type': contentType,
-              'Content-Encoding': contentEncoding,
-              'Cache-Control': 'public, immutable, max-age=31536000',
-              Expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
-              ETag: `"${hashFile}"`,
+              'content-type': contentType,
+              'content-encoding': contentEncoding,
+              'cache-control': 'public, immutable, max-age=31536000',
+              expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
+              etag: `"${hashFile}"`,
             },
             body: await readFile(cacheFile),
           },
@@ -86,6 +87,7 @@ const options = {
     async beforeSendResponse(requestDetail, responseDetail) {
       let newResponse = responseDetail.response;
 
+      newResponse = await pipeLovercaseHeader(newResponse, requestDetail);
       newResponse = await pipeHeadersClean(newResponse, requestDetail);
       newResponse = await pipeImage(newResponse, requestDetail);
       newResponse = await pipeLosslessImage(newResponse, requestDetail);

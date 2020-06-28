@@ -17,13 +17,13 @@ const svgo = new Svgo({
  */
 export async function pipeSvg(response, request) {
   if (
-    response?.header['Content-Type']?.startsWith('image/svg+xml')
+    response?.header['content-type']?.startsWith('image/svg+xml')
   ) {
     const oldSize = response.body.length;
     const filePath = await tempWrite(response.body, 'img.svg');
 
     try {
-      const data = await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
+      await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
 
       const newB = await readFile(`${filePath}.tmp.svg`);
 

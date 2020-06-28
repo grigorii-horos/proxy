@@ -20,7 +20,7 @@ const cacheMimeTypes = [
 export async function pipeSaveToCache(response, request) {
   if (
     response?.statusCode === 200
-    && cacheMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0
+    && cacheMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
     && request.requestOptions.method === 'GET'
     && response.body.length > 8 * 1024
   ) {
@@ -35,9 +35,9 @@ export async function pipeSaveToCache(response, request) {
     const writeMeta = writeFile(
       `${cacheFile}.meta`,
       `${
-        response.header['Content-Type']
+        response.header['content-type']
       }\n${
-        response.header['Content-Encoding']
+        response.header['content-encoding']
       }`,
     );
 
@@ -50,7 +50,7 @@ export async function pipeSaveToCache(response, request) {
       ...response,
       header: {
         ...response.header,
-        ETag: `"${hashFile}"`,
+        etag: `"${hashFile}"`,
       },
     };
   }

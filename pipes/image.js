@@ -14,7 +14,7 @@ const imageMimeTypes = [
  */
 export async function pipeImage(response, request) {
   if (
-    imageMimeTypes.includes(response?.header['Content-Type'])
+    imageMimeTypes.includes(response?.header['content-type'])
   ) {
     // try {
     const oldSize = response.body.length;
@@ -38,7 +38,7 @@ export async function pipeImage(response, request) {
       body: newSize < oldSize ? newBody : response.body,
       header: {
         ...response.header,
-        'Content-Type': newSize < oldSize ? 'image/webp' : response.header['Content-Type'],
+        'content-type': newSize < oldSize ? 'image/webp' : response.header['content-type'],
       },
     };
     // } catch (error) {

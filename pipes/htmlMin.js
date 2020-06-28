@@ -10,12 +10,12 @@ import iconv from 'iconv-lite';
  */
 export async function pipeHtmlMin(response, request) {
   if (
-    response?.header['Content-Type']?.startsWith('text/html')
+    response?.header['content-type']?.startsWith('text/html')
   ) {
     let bodyString = response.body;
     const lines = (bodyString.toString().match(/\n/g) || '').length + 1;
 
-    const charsetDetect = charset(response?.header['Content-Type']);
+    const charsetDetect = charset(response?.header['content-type']);
     if (charsetDetect && charsetDetect !== 'utf-8') {
       bodyString = iconv.decode(Buffer.from(bodyString), charsetDetect);
     }
@@ -48,7 +48,7 @@ export async function pipeHtmlMin(response, request) {
       body: bodyString,
       header: {
         ...response.header,
-        'Content-Type': 'text/html;charset=utf-8',
+        'content-type': 'text/html;charset=utf-8',
       },
     };
   }

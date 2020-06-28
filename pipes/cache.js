@@ -15,15 +15,15 @@ const alwaysCache = [
  */
 export async function pipeCache(response) {
   if (
-    response?.header['Content-Type']
-    && alwaysCache.filter((mime) => response?.header['Content-Type'].startsWith(mime)).length > 0
+    response?.header['content-type']
+    && alwaysCache.filter((mime) => response?.header['content-type'].startsWith(mime)).length > 0
   ) {
     return {
       ...response,
       header: {
         ...response.header,
-        'Cache-Control': 'public, immutable, max-age=31536000',
-        Expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
+        'cache-control': 'public, immutable, max-age=31536000',
+        expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
       },
     };
   }

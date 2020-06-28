@@ -14,7 +14,7 @@ const compressMimeTypes = [
  */
 export async function pipeCompress(response, request) {
   if (
-    compressMimeTypes.filter((mime) => response?.header['Content-Type']?.startsWith(mime)).length > 0
+    compressMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
   ) {
     const [encoding, compressedBody] = await compress(response.body, request.protocol);
     return {
@@ -22,7 +22,7 @@ export async function pipeCompress(response, request) {
       body: compressedBody,
       header: {
         ...response.header,
-        'Content-Encoding': encoding,
+        'content-encoding': encoding,
       },
     };
   }
