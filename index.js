@@ -15,6 +15,7 @@ import blockUrls from './blockUrls.js';
 import { pipeSaveToCache } from './pipes/saveToCache.js';
 import { pipeSvg } from './pipes/svg.js';
 import { pipeLovercaseHeader } from './pipes/lovercaseHeaders.js';
+import { pipeCharset } from './pipes/charset.js';
 
 const fsExistsAsync = promisify(fs.exists);
 
@@ -86,11 +87,14 @@ const options = {
 
       newResponse = await pipeLovercaseHeader(newResponse, requestDetail);
       newResponse = await pipeHeadersClean(newResponse, requestDetail);
+
+      newResponse = await pipeCharset(newResponse, requestDetail);
+
+      newResponse = await pipeHtmlMin(newResponse, requestDetail);
+
       newResponse = await pipeImage(newResponse, requestDetail);
       newResponse = await pipeLosslessImage(newResponse, requestDetail);
-
       newResponse = await pipeSvg(newResponse, requestDetail);
-      newResponse = await pipeHtmlMin(newResponse, requestDetail);
 
       newResponse = await pipeCompress(newResponse, requestDetail);
       newResponse = await pipeSaveToCache(newResponse, requestDetail);
