@@ -114,6 +114,7 @@ proxyServer.on('ready', () => {
   /* */
 });
 proxyServer.on('error', (e) => {
+  console.log(e);
   /* */
 });
 proxyServer.start();
