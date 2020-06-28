@@ -1,7 +1,7 @@
 import charset from 'charset';
 import iconv from 'iconv-lite';
 
-// import { minHtmlFn } from '../utils/minHtml.js';
+import { charsetFn } from '../utils/charset.js';
 
 const convertCharsetMimes = [
   'text/html',
@@ -20,7 +20,7 @@ export async function pipeCharset(response, request) {
 
     const charsetDetect = charset(response?.header['content-type']);
     if (charsetDetect && charsetDetect !== 'utf-8') {
-      bodyString = iconv.decode(Buffer.from(bodyString), charsetDetect);
+      bodyString = await charsetFn(bodyString, charsetDetect);
     }
 
     return {
