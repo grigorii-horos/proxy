@@ -28,7 +28,7 @@ export async function pipeCharset(response, request) {
       body: bodyString,
       header: {
         ...response.header,
-        'content-type': `${response.header['content-type'].split(';')[0]}`,
+        'content-type': `${response.header['content-type'].split(';')[0]};charset=utf-8`,
       },
     };
   }
