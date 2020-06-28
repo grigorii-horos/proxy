@@ -9,10 +9,10 @@ export async function pipeHeadersClean(response) {
   delete response?.header.pragma;
   delete response?.header.server;
   delete response?.header.vary;
-  delete response?.header['access-control-allow-credentials'];
-  delete response?.header['access-control-allow-methods'];
-  delete response?.header['access-control-allow-origin'];
-  delete response?.header['access-control-expose-headers'];
+  // delete response?.header['access-control-allow-credentials'];
+  // delete response?.header['access-control-allow-methods'];
+  // delete response?.header['access-control-allow-origin'];
+  // delete response?.header['access-control-expose-headers'];
   delete response?.header['cf-bgj'];
   delete response?.header['cf-cache-status'];
   delete response?.header['cf-polished'];
