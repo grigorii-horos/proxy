@@ -14,7 +14,7 @@ parentPort.once('message', async (data) => {
     .toFormat('webp', {
       lossless: false,
       quality: 70,
-      reductionEffort: 4,
+      reductionEffort: 5,
     })
     .toBuffer();
 
