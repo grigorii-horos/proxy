@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { promisify } from 'util';
-import xxhash from 'xxhash';
+import crypto from 'crypto';
 
 const writeFile = promisify(fs.writeFile);
 const fsRename = promisify(fs.rename);
@@ -24,10 +24,7 @@ export async function pipeSaveToCache(response, request) {
     && request.requestOptions.method === 'GET'
     && response.body.length > 8 * 1024
   ) {
-    const hashFile = xxhash.hash(
-      Buffer.from(request.url),
-      0xCAFEBABE,
-    );
+    const hashFile = crypto.createHash('sha1').update(request.url).digest('base64');
 
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
 

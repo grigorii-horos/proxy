@@ -1,5 +1,5 @@
 import anyproxy from 'anyproxy';
-import xxhash from 'xxhash';
+import crypto from 'crypto';
 import fs from 'fs';
 
 import { promisify } from 'util';
@@ -45,10 +45,7 @@ const options = {
 
       const headers = lowercaseKeys(requestDetail.header || {});
 
-      const hashFile = xxhash.hash(
-        Buffer.from(requestDetail.url),
-        0xCAFEBABE,
-      );
+      const hashFile = crypto.createHash('sha1').update(requestDetail.url).digest('base64');
 
       const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
