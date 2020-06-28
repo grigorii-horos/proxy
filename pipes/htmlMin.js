@@ -1,8 +1,7 @@
-import minifier from 'html-minifier';
-import replaceAll from 'string.prototype.replaceall';
 import charset from 'charset';
-
 import iconv from 'iconv-lite';
+
+import { minHtmlFn } from '../utils/minHtml.js';
 
 /**
  * @param response
@@ -24,24 +23,7 @@ export async function pipeHtmlMin(response, request) {
       return response;
     }
 
-    bodyString = replaceAll(bodyString, '<img', '<img loading="lazy"');
-    bodyString = replaceAll(bodyString, '<iframe', '<iframe loading="lazy"');
-
-    bodyString = minifier.minify(bodyString, {
-      collapseBooleanAttributes: true,
-      collapseWhitespace: true,
-      conservativeCollapse: true,
-      continueOnParseError: true,
-      decodeEntities: true,
-      keepClosingSlash: false,
-      minifyCSS: true,
-      minifyJS: true,
-      removeAttributeQuotes: true,
-      removeComments: true,
-      removeEmptyAttributes: true,
-      sortAttributes: false,
-      sortClassName: false,
-    });
+    bodyString = minHtmlFn(bodyString);
 
     return {
       ...response,
