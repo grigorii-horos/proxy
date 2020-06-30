@@ -4,7 +4,7 @@ import minifier from 'html-minifier';
 import replaceAll from 'string.prototype.replaceall';
 
 parentPort.once('message', async (data) => {
-  let bodyString = replaceAll(data, '<img', '<img loading="lazy"');
+  let bodyString = replaceAll(data.toString(), '<img', '<img loading="lazy"');
   bodyString = replaceAll(bodyString, '<iframe', '<iframe loading="lazy"');
 
   // bodyString = minifier.minify(bodyString, {

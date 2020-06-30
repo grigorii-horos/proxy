@@ -11,7 +11,7 @@ parentPort.once('message', async ([data, header]) => {
   if (charsetDetect && charsetDetect !== 'utf-8') {
     bodyString = iconv.decode(data, charsetDetect);
   } else {
-    bodyString = String.fromCharCode.apply(null,data);
+    bodyString =data;
   }
 
   parentPort.postMessage({
