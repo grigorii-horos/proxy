@@ -9,9 +9,9 @@ parentPort.once('message', async ([data, header]) => {
 
   let bodyString;
   if (charsetDetect && charsetDetect !== 'utf-8') {
-    bodyString = iconv.decode(data, charsetDetect);
+    bodyString = (iconv.decode(data, charsetDetect));
   } else {
-    bodyString =data;
+    bodyString =(data);
   }
 
   parentPort.postMessage({
