@@ -1,6 +1,5 @@
 import prettyBytes from 'pretty-bytes';
-
-import { imageFn } from '../utils/losslessImage.js';
+import sharp from 'sharp';
 
 const imageMimeTypes = [
   'image/png',
@@ -15,7 +14,23 @@ export async function pipeLosslessImage(response, request) {
   if (
     imageMimeTypes.includes(response?.header['content-type'])
   ) {
-    const newBody = imageFn(response.body);
+    let image = sharp(await response.body);
+
+    const metadata = await image.metadata();
+
+    if (metadata.width > 1500) {
+      image = image.resize(Math.round(metadata.width / 1.5));
+    } else if (metadata.width > 2500) {
+      image = image.resize(Math.round(metadata.width / 2));
+    }
+
+    const newBody = image
+      .toFormat('webp', {
+        lossless: false,
+        quality: 70,
+        reductionEffort: 5,
+      })
+      .toBuffer();
 
     return {
       ...response,
