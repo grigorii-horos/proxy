@@ -7,10 +7,6 @@ import { promisify } from 'util';
 
 const readFile = promisify(fs.readFile);
 
-const svgo = new Svgo({
-
-});
-
 /**
  * @param response
  * @param request

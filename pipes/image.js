@@ -18,26 +18,16 @@ export async function pipeImage(response, request) {
   ) {
     const oldSize = response.body.length;
 
-    const newBody = await imageFn(response.body);
+    const newBody =  imageFn(response.body);
 
-    const newSize = newBody.length;
 
-    console.log(
-      `Compres Image: Old - ${
-        prettyBytes(oldSize)
-      } New - ${
-        prettyBytes(newSize)
-      } Compression - ${
-        Math.floor((100 * newSize) / oldSize)
-      }%`,
-    );
-
+  
     return {
       ...response,
-      body: newSize < oldSize ? newBody : response.body,
+      body:  newBody ,
       header: {
         ...response.header,
-        'content-type': newSize < oldSize ? 'image/webp' : response.header['content-type'],
+        'content-type': 'image/webp' // response.header['content-type'],
       },
     };
   

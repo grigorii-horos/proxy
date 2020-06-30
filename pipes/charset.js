@@ -15,11 +15,11 @@ export async function pipeCharset(response, request) {
   if (
     convertCharsetMimes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
   ) {
-    const bodyString = await charsetFn(response.body, response?.header['content-type']);
+    const bodyString = charsetFn(response.newBody, response?.header['content-type']);
 
     return {
       ...response,
-      body: bodyString,
+      newBody: bodyString,
       header: {
         ...response.header,
         'content-type': `${response.header['content-type'].split(';')[0]};charset=utf-8`,

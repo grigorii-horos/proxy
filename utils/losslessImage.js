@@ -11,10 +11,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));// eslint-disable-line
  * @param protocol
  */
 export async function imageFn(data) {
+      const newData = await data
+
   return new Promise((resolve, reject) => {
     const worker = new Worker(`${__dirname}/workers/losslessImage.js`);
 
     worker.on('message', (message) => resolve(Buffer.from(message.data)));
-    worker.postMessage((data));
+    worker.postMessage(newData);
   });
 }

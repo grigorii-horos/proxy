@@ -12,17 +12,17 @@ export async function pipeHtmlMin(response, request) {
     response?.header['content-type']?.startsWith('text/html')
   ) {
     let bodyString = response.body;
-    const lines = (bodyString.toString().match(/\n/g) || '').length + 1;
+    const lines = ((await bodyString).toString().match(/\n/g) || '').length + 1;
 
     if (bodyString.length / lines > 240) {
       return response;
     }
 
-    bodyString = await minHtmlFn(bodyString);
+    bodyString = minHtmlFn(bodyString);
 
     return {
       ...response,
-      body: bodyString,
+      newBody: bodyString,
     };
   }
 

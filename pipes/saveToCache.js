@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs, { writeFileSync } from 'fs';
 import { promisify } from 'util';
 import crypto from 'crypto';
 
@@ -28,20 +28,24 @@ export async function pipeSaveToCache(response, request) {
 
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
-    const writeBody = writeFile(`${cacheFile}.tmp`, response.body);
-    const writeMeta = writeFile(
-      `${cacheFile}.meta`,
-      `${
+   const writeFS=   async (cacheFile)=> {
+      const writeBody = writeFile(`${cacheFile}.tmp`, response.body);
+      const writeMeta = writeFile(
+        `${cacheFile}.meta`,
+        `${
         response.header['content-type']
-      }\n${
+        }\n${
         response.header['content-encoding']
-      }`,
-    );
-
-    await Promise.all([writeBody, writeMeta]);
-
+        }`,
+      );
+          await Promise.all([writeBody, writeMeta]);
     await fsRename(`${cacheFile}.tmp`, cacheFile);
 
+    }
+
+
+    writeFS(cacheFile)
+    
     console.log('Save to cache', cacheFile);
     return {
       ...response,

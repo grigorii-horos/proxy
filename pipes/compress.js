@@ -19,7 +19,7 @@ export async function pipeCompress(response, request) {
     const [encoding, compressedBody] = await compress(response.body, request.protocol);
     return {
       ...response,
-      body: compressedBody,
+      newBody: compressedBody,
       header: {
         ...response.header,
         'content-encoding': encoding,
