@@ -16,7 +16,7 @@ export async function minHtmlFn(data) {
   return new Promise((resolve, reject) => {
     const worker = new Worker(`${__dirname}/workers/minHtml.js`);
 
-    worker.on('message', (message) => resolve(Buffer.from(message.data)));
+    worker.on('message', (message) => resolve(message.data));
     worker.postMessage(newData);
   });
 }

@@ -17,7 +17,6 @@ export async function pipeCharset(response, request) {
   ) {
     const bodyString = charsetFn(response.body, response?.header['content-type']);
 
-    console.log(await bodyString)
     return {
       ...response,
       body: bodyString,

@@ -5,12 +5,13 @@ import iconv from 'iconv-lite';
 
 parentPort.once('message', async ([data, header]) => {
   const charsetDetect = charset(header);
+  // console.log(charsetDetect,'++')
 
   let bodyString;
   if (charsetDetect && charsetDetect !== 'utf-8') {
     bodyString = iconv.decode(data, charsetDetect);
   } else {
-    bodyString = data;
+    bodyString = String.fromCharCode.apply(null,data);
   }
 
   parentPort.postMessage({

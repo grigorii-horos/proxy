@@ -12,7 +12,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));// eslint-disable-line
  */
 export async function charsetFn(data, charset) {
   const newData = await data
-  
 
   return new Promise((resolve, reject) => {
     const worker = new Worker(`${__dirname}/workers/charset.js`);
