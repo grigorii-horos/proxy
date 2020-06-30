@@ -1,24 +1,44 @@
-import { Worker,parentPort,workerData} from 'worker_threads'
+import { parentPort, workerData } from 'worker_threads';
 
+import { pipeCompress } from './pipes/compress.js';
+import { pipeHeadersClean } from './pipes/headersClean.js';
+// import { pipeImage } from './pipes/image.js';
+import { pipeHtml } from './pipes/html.js';
+// import { pipeLosslessImage } from './pipes/losslessImage.js';
+import { pipeCache } from './pipes/cache.js';
+import { pipeSaveToCache } from './pipes/saveToCache.js';
+import { pipeSvg } from './pipes/svg.js';
+import { pipeLovercaseHeader } from './pipes/lovercaseHeaders.js';
+import { pipeCharset } from './pipes/charset.js';
 
+(async () => {
+  const { request, response } = workerData;
+  let newResponse = response;
 
+  newResponse = {
+    ...newResponse,
+    body: Buffer.from(newResponse.body),
+  };
 
-      // newResponse = await pipeLovercaseHeader(newResponse, requestDetail);
-      // newResponse = await pipeHeadersClean(newResponse, requestDetail);
+  newResponse = await pipeLovercaseHeader(newResponse, request);
+  newResponse = await pipeHeadersClean(newResponse, request);
 
-      // newResponse = await pipeCharset(newResponse, requestDetail);
+  newResponse = await pipeCharset(newResponse, request);
 
-      // newResponse = await pipeHtmlMin(newResponse, requestDetail);
+  newResponse = await pipeHtml(newResponse, request);
 
-      // newResponse = await pipeImage(newResponse, requestDetail);
-      // newResponse = await pipeLosslessImage(newResponse, requestDetail);
-      // newResponse = await pipeSvg(newResponse, requestDetail);
+  // newResponse = await pipeImage(newResponse, request);
+  // newResponse = await pipeLosslessImage(newResponse, request);
+  newResponse = await pipeSvg(newResponse, request);
 
-      // newResponse = await pipeCompress(newResponse, requestDetail);
-      // newResponse = await pipeSaveToCache(newResponse, requestDetail);
-      // newResponse = await pipeCache(newResponse, requestDetail);
+  newResponse = await pipeCompress(newResponse, request);
+  newResponse = await pipeSaveToCache(newResponse, request);
+  newResponse = await pipeCache(newResponse, request);
 
-parentPort.postMessage({
-  hello: Buffer.from('world'), binba: {
-  boba:123
-}})
+  newResponse = {
+    ...newResponse,
+    body: await newResponse.body,
+  };
+
+  parentPort.postMessage(newResponse);
+})();

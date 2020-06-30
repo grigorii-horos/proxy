@@ -15,19 +15,14 @@ export async function pipeLosslessImage(response, request) {
   if (
     imageMimeTypes.includes(response?.header['content-type'])
   ) {
-
-    const newBody =  imageFn(response.body);
-
-
-
-    
+    const newBody = imageFn(response.body);
 
     return {
       ...response,
-      body:  newBody,//: response.body,
+      body: newBody, // : response.body,
       header: {
         ...response.header,
-        'content-type':  'image/webp' //: response.header['content-type'],
+        'content-type': 'image/webp', // : response.header['content-type'],
       },
     };
   }

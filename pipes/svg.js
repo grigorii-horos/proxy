@@ -1,5 +1,3 @@
-import Svgo from 'svgo';
-import prettyBytes from 'pretty-bytes';
 import tempWrite from 'temp-write';
 import execa from 'execa';
 import fs from 'fs';
@@ -15,14 +13,12 @@ export async function pipeSvg(response, request) {
   if (
     response?.header['content-type']?.startsWith('image/svg+xml')
   ) {
-    const oldSize = response.body.length;
     const filePath = await tempWrite(response.body, 'img.svg');
 
     try {
       await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
 
       const newB = await readFile(`${filePath}.tmp.svg`);
-
 
       return {
         ...response,

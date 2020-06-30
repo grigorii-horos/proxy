@@ -18,34 +18,35 @@ const cacheMimeTypes = [
  * @param request
  */
 export async function pipeSaveToCache(response, request) {
+  const newBody = await response.body;
   if (
     response?.statusCode === 200
     && cacheMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
     && request.requestOptions.method === 'GET'
-    && response.body.length > 128
+    && newBody.length > 128
   ) {
+    console.log('+++++++');
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
-   const writeFS=   async (cacheFile)=> {
-      const writeBody = writeFile(`${cacheFile}.tmp`, response.body);
+    const writeFS = async (cacheFile) => {
+      const writeBody = writeFile(`${cacheFile}.tmp`, newBody);
       const writeMeta = writeFile(
         `${cacheFile}.meta`,
         `${
-        response.header['content-type']
+          response.header['content-type']
         }\n${
-        response.header['content-encoding']
+          response.header['content-encoding']
         }`,
       );
-          await Promise.all([writeBody, writeMeta]);
-    await fsRename(`${cacheFile}.tmp`, cacheFile);
+      await Promise.all([writeBody, writeMeta]);
+      await fsRename(`${cacheFile}.tmp`, cacheFile);
+      console.log(11111);
+    };
 
-    }
+    await writeFS(cacheFile);
 
-
-    writeFS(cacheFile)
-    
     console.log('Save to cache', cacheFile);
     return {
       ...response,

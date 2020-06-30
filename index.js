@@ -5,21 +5,10 @@ import fs from 'fs';
 import { promisify } from 'util';
 
 import lowercaseKeys from 'lowercase-keys';
-import { pipeCompress } from './pipes/compress.js';
-import { pipeHeadersClean } from './pipes/headersClean.js';
-import { pipeImage } from './pipes/image.js';
-import { pipeHtmlMin } from './pipes/htmlMin.js';
-import { pipeLosslessImage } from './pipes/losslessImage.js';
-import { pipeCache } from './pipes/cache.js';
-import blockUrls from './blockUrls.js';
-import { pipeSaveToCache } from './pipes/saveToCache.js';
-import { pipeSvg } from './pipes/svg.js';
-import { pipeLovercaseHeader } from './pipes/lovercaseHeaders.js';
-import { pipeCharset } from './pipes/charset.js';
-
-import { Worker,parentPort,workerData} from 'worker_threads'
+import { Worker, parentPort, workerData } from 'worker_threads';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import blockUrls from './blockUrls.js';
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url));// eslint-disable-line no-underscore-dangle,max-len
@@ -90,26 +79,39 @@ const options = {
     },
 
     async beforeSendResponse(requestDetail, responseDetail) {
-
-      let newResponse = {...responseDetail.response};
-    let w = new Worker(__dirname+'/worker.js',{workerData:newResponse})
-
-
-
+      // console.log((requestDetail), '----');
       return new Promise((resolve, reject) => {
-        w.on('message',async (msg) => {
+        const w = new Worker(`${__dirname}/worker.js`, {
+          workerData: {
+            request: {
+              requestOptions: requestDetail.requestOptions,
+              protocol: requestDetail.protocol,
+              url: requestDetail.url,
+              requestData: requestDetail.requestData,
+            },
+            response: {
+              statusCode: responseDetail.response.statusCode,
+              header: responseDetail.response.header,
+              body: responseDetail.response.body,
+            },
+          },
+        });
+
+        w.on('message', (response) => {
+          let newResponse = response;
+          newResponse = {
+            ...newResponse,
+            body: Buffer.from(newResponse.body),
+          };
+
           resolve({
             response: {
               ...newResponse,
-              ...msg
-            }
-          })
-    
-
-
-        })
-      })
-    }
+            },
+          });
+        });
+      });
+    },
   },
   webInterface: {
     enable: true,
