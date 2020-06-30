@@ -22,7 +22,7 @@ export async function pipeCompress(response, request) {
   ) {
     //
 
-    const newData = response.body;
+    const newData = await response.body;
 
     if (request.protocol === 'http') {
       return {
