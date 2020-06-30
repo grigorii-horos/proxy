@@ -16,7 +16,6 @@ export async function pipeImage(response, request) {
   if (
     imageMimeTypes.includes(response?.header['content-type'])
   ) {
-    const oldSize = response.body.length;
 
     const newBody =  imageFn(response.body);
 

@@ -22,7 +22,7 @@ export async function pipeHtmlMin(response, request) {
 
     return {
       ...response,
-      newBody: bodyString,
+      body: bodyString,
     };
   }
 

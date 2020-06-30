@@ -23,16 +23,6 @@ export async function pipeSvg(response, request) {
 
       const newB = await readFile(`${filePath}.tmp.svg`);
 
-      const newSize = newB.length;
-      console.log(
-        `Compres Image: Old - ${
-          prettyBytes(oldSize)
-        } New - ${
-          prettyBytes(newSize)
-        } Compression - ${
-          Math.floor((100 * newSize) / oldSize)
-        }%`,
-      );
 
       return {
         ...response,

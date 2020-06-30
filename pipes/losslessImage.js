@@ -24,7 +24,7 @@ export async function pipeLosslessImage(response, request) {
 
     return {
       ...response,
-      newBody:  newBody,//: response.body,
+      body:  newBody,//: response.body,
       header: {
         ...response.header,
         'content-type':  'image/webp' //: response.header['content-type'],

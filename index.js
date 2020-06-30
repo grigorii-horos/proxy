@@ -83,7 +83,7 @@ const options = {
     },
 
     async beforeSendResponse(requestDetail, responseDetail) {
-      let newResponse = {...responseDetail.response,newBody:responseDetail.response.body};
+      let newResponse = {...responseDetail.response};
 
       newResponse = await pipeLovercaseHeader(newResponse, requestDetail);
       newResponse = await pipeHeadersClean(newResponse, requestDetail);
@@ -103,7 +103,7 @@ const options = {
       return {
         response: {
           ...newResponse,
-          body: await newResponse.newBody
+          body: await newResponse.body
         }
       };
     },
@@ -115,8 +115,8 @@ const options = {
   throttle: 0,
   forceProxyHttps: true,
   wsIntercept: false,
-  // silent: true,
   silent: false,
+  silent: true,
 };
 const proxyServer = new anyproxy.ProxyServer(options);
 
