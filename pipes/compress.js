@@ -55,9 +55,9 @@ export async function pipeCompress(response, request) {
           ...response.header,
           'content-encoding': 'br',
         },
-      }
-    } catch (err) {
-      console.log('*************')
+      };
+    } catch (error) {
+      console.log('*************');
       console.log(newData, {
         chunkSize: 32 * 1024,
         params: {
@@ -66,10 +66,9 @@ export async function pipeCompress(response, request) {
           // @ts-ignore
           [zlib.constants.BROTLI_PARAM_SIZE_HINT]: newData.length,
         },
-      })
-      console.log(err)
-      console.log('*************')
-
+      });
+      console.log(error);
+      console.log('*************');
     }
   }
 

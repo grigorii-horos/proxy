@@ -10,23 +10,22 @@ const readFile = promisify(fs.readFile);
  * @param request
  */
 export async function pipeSvg(response, request) {
+  let newBody = await response.body;
+
   if (
     response?.header['content-type']?.startsWith('image/svg+xml')
+     && newBody.length > 128
   ) {
-    const filePath = await tempWrite(await response.body, 'img.svg');
+    const filePath = await tempWrite(newBody, 'img.svg');
 
-    try {
-      await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
+    await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
 
-      const newB = await readFile(`${filePath}.tmp.svg`);
+    newBody = await readFile(`${filePath}.tmp.svg`);
 
-      return {
-        ...response,
-        body: newB,
-      };
-    } catch (error) {
-      return response;
-    }
+    return {
+      ...response,
+      body: newBody,
+    };
   }
 
   return response;

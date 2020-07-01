@@ -11,21 +11,20 @@ const imageMimeTypes = [
   'image/gif',
 ];
 
-var args = [
-   '-filter',
-   'Triangle',
-   '-define',
-   'filter:support=2',
-   '-unsharp','0.25x0.25+8+0.065',
-   '-dither','None',
-   '-posterize','136',
-   '-interlace','none',
+const arguments_ = [
+  '-filter',
+  'Triangle',
+  '-define',
+  'filter:support=2',
+  '-unsharp', '0.25x0.25+8+0.065',
+  '-dither', 'None',
+  '-posterize', '136',
+  '-interlace', 'none',
   '-colorspace', 'sRGB',
-   '-define','webp:image-hint=photo,method=6,thread-level=8',
+  '-define', 'webp:image-hint=photo,method=6,thread-level=8',
   '-strip',
   '-auto-orient',
-        '-quality', '82',
-
+  '-quality', '82',
 
 ];
 
@@ -34,15 +33,17 @@ var args = [
  * @param request
  */
 export async function pipeLosslessImage(response, request) {
+  let newBody = await response.body;
+
   if (
     imageMimeTypes.includes(response?.header['content-type'])
+    && newBody.length > 128
   ) {
+    const filePath = await tempWrite(newBody, 'img');
 
-    const filePath = await tempWrite(await response.body, 'img');
+    await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
 
-      await execa('convert', [filePath, ...args, `${filePath}.webp`]);
-
-      const newBody = await readFile(`${filePath}.webp`);
+    newBody = await readFile(`${filePath}.webp`);
 
     return {
       ...response,
