@@ -19,7 +19,7 @@ const arguments_ = [
   // '-posterize', '136',
   // '-interlace', 'none',
   '-colorspace', 'sRGB',
-  '-define', 'webp:image-hint=photo,method=6,thread-level=8',
+  '-define', 'webp:image-hint=photo,partition-limit=90,method=4,thread-level=8',
   '-strip',
   '-auto-orient',
   '-quality', '60',
@@ -39,8 +39,11 @@ export async function pipeImage(response, request) {
     try {
       const filePath = await tempWrite(newBody, 'img');
 
-      await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
-
+      if (newBody.length > 1024 * 1024 * 1024) {
+        await execa('convert', [filePath, '-resize', '50%', ...arguments_, `${filePath}.webp`]);
+      }else{
+        await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
+      }
       newBody = await readFile(`${filePath}.webp`);
 
       return {

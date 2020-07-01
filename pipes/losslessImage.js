@@ -19,7 +19,7 @@ const arguments_ = [
   // '-posterize', '136',
   // '-interlace', 'none',
   '-colorspace', 'sRGB',
-  '-define', 'webp:image-hint=photo,method=6,thread-level=8',
+  '-define', 'webp:image-hint=picture,method=5,thread-level=8',
   '-strip',
   '-auto-orient',
   '-quality', '70',
