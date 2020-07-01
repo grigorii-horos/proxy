@@ -38,10 +38,27 @@ export async function pipeCompress(response, request) {
       };
     }
 
-    return {
-      ...response,
-      // @ts-ignore
-      body: brotliCompress(newData, {
+    try {
+      return {
+        ...response,
+        // @ts-ignore
+        body: brotliCompress(newData, {
+          chunkSize: 32 * 1024,
+          params: {
+            [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 1,
+            // @ts-ignore
+            [zlib.constants.BROTLI_PARAM_SIZE_HINT]: newData.length,
+          },
+        }),
+        header: {
+          ...response.header,
+          'content-encoding': 'br',
+        },
+      }
+    } catch (err) {
+      console.log('*************')
+      console.log(newData, {
         chunkSize: 32 * 1024,
         params: {
           [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
@@ -49,12 +66,11 @@ export async function pipeCompress(response, request) {
           // @ts-ignore
           [zlib.constants.BROTLI_PARAM_SIZE_HINT]: newData.length,
         },
-      }),
-      header: {
-        ...response.header,
-        'content-encoding': 'br',
-      },
-    };
+      })
+      console.log(err)
+      console.log('*************')
+
+    }
   }
 
   return response;
