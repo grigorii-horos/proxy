@@ -16,16 +16,21 @@ export async function pipeSvg(response, request) {
     response?.header['content-type']?.startsWith('image/svg+xml')
      && newBody.length > 128
   ) {
-    const filePath = await tempWrite(newBody, 'img.svg');
+    try {
+      const filePath = await tempWrite(newBody, 'img.svg');
 
-    await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
+      await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
 
-    newBody = await readFile(`${filePath}.tmp.svg`);
+      newBody = await readFile(`${filePath}.tmp.svg`);
 
-    return {
-      ...response,
-      body: newBody,
-    };
+      return {
+        ...response,
+        body: newBody,
+      };
+    } catch (error) {
+      console.log('-----', error);
+      return response;
+    }
   }
 
   return response;

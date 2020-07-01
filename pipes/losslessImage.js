@@ -39,20 +39,25 @@ export async function pipeLosslessImage(response, request) {
     imageMimeTypes.includes(response?.header['content-type'])
     && newBody.length > 128
   ) {
-    const filePath = await tempWrite(newBody, 'img');
+    try {
+      const filePath = await tempWrite(newBody, 'img');
 
-    await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
+      await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
 
-    newBody = await readFile(`${filePath}.webp`);
+      newBody = await readFile(`${filePath}.webp`);
 
-    return {
-      ...response,
-      body: newBody,
-      header: {
-        ...response.header,
-        'content-type': 'image/webp', // response.header['content-type'],
-      },
-    };
+      return {
+        ...response,
+        body: newBody,
+        header: {
+          ...response.header,
+          'content-type': 'image/webp', // response.header['content-type'],
+        },
+      };
+    } catch (error) {
+      console.log('-----', error);
+      return response;
+    }
   }
 
   return response;

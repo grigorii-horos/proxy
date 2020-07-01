@@ -25,7 +25,6 @@ export async function pipeSaveToCache(response, request) {
     && request.requestOptions.method === 'GET'
     && newBody.length > 128
   ) {
-    console.log('+++++++');
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
@@ -42,7 +41,6 @@ export async function pipeSaveToCache(response, request) {
       );
       await Promise.all([writeBody, writeMeta]);
       await fsRename(`${cacheFile}.tmp`, cacheFile);
-      console.log(11111);
     };
 
     await writeFS(cacheFile);
