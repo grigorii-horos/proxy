@@ -19,7 +19,7 @@ export async function pipeSvg(response, request) {
     try {
       const filePath = await tempWrite(newBody, 'img.svg');
 
-      await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
+     console.log('++++', await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]))
 
       newBody = await readFile(`${filePath}.tmp.svg`);
 
