@@ -39,8 +39,7 @@ export async function pipeImage(response, request) {
     try {
       const filePath = await tempWrite(newBody, 'img');
 
-      console.log(')))',newBody.length)
-      if (newBody.length > 1024 * 1024 * 1024) {
+      if (newBody.length > 1024 * 1024) {
         await execa('convert', [filePath, '-resize', '50%', ...arguments_, `${filePath}.webp`]);
       }else{
         await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
