@@ -12,20 +12,17 @@ const imageMimeTypes = [
 ];
 
 const arguments_ = [
-  '-filter',
-  'Triangle',
-  '-define',
-  'filter:support=2',
-  '-unsharp', '0.25x0.25+8+0.065',
-  '-dither', 'None',
-  '-posterize', '136',
-  '-interlace', 'none',
+  // '-filter',  'Triangle',
+  // '-define',  'filter:support=2',
+  // '-unsharp', '0.25x0.25+8+0.065',
+  // '-dither', 'None',
+  // '-posterize', '136',
+  // '-interlace', 'none',
   '-colorspace', 'sRGB',
   '-define', 'webp:image-hint=photo,method=6,thread-level=8',
   '-strip',
   '-auto-orient',
-  '-quality', '82',
-
+  '-quality', '70',
 ];
 
 /**
