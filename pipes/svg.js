@@ -13,7 +13,7 @@ export async function pipeSvg(response, request) {
   if (
     response?.header['content-type']?.startsWith('image/svg+xml')
   ) {
-    const filePath = await tempWrite(response.body, 'img.svg');
+    const filePath = await tempWrite(await response.body, 'img.svg');
 
     try {
       await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]);
