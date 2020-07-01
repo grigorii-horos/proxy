@@ -32,8 +32,8 @@ import { pipeSvg } from './pipes/svg.js';
   newResponse = await pipeSvg(newResponse, request);
 
   newResponse = await pipeCompress(newResponse, request);
-  newResponse = await pipeSaveToCache(newResponse, request);
   newResponse = await pipeCache(newResponse, request);
+  newResponse = await pipeSaveToCache(newResponse, request);
 
   newResponse = {
     ...newResponse,

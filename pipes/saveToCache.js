@@ -43,7 +43,7 @@ export async function pipeSaveToCache(response, request) {
       await fsRename(`${cacheFile}.tmp`, cacheFile);
     };
 
-    await writeFS(cacheFile);
+    writeFS(cacheFile);
 
     console.log('Save to cache', cacheFile);
     return {
