@@ -55,6 +55,8 @@ export async function pipeImage(response, request) {
         await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
       }
       newBody = await readFile(fileConverted);
+      unlinkFile(fileToWrite);
+      unlinkFile(fileConverted);
 
       if (oldSize < newBody.length) {
         throw new Error('Converted file is bigger than original');
