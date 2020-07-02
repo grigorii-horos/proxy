@@ -40,7 +40,8 @@ export async function pipeImage(response, request) {
     && newBody.length > 128
   ) {
     try {
-      // const filePath = await tempWrite(newBody, 'img');
+      const oldSize = newBody.length;
+
       const fileToWrite = tempy.file({ extension: 'img' });
       const fileConverted = tempy.file({ extension: 'webm' });
 
@@ -55,6 +56,10 @@ export async function pipeImage(response, request) {
       }
       newBody = await readFile(fileConverted);
 
+      if (oldSize < newBody.length) {
+        throw new Error('Converted file is bigger than original');
+      }
+
       return {
         ...response,
         body: newBody,
@@ -64,7 +69,6 @@ export async function pipeImage(response, request) {
         },
       };
     } catch (error) {
-      console.log('-----', error);
       return response;
     }
   }
