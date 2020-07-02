@@ -1,17 +1,20 @@
-import sharp from 'sharp';
 import tempWrite from 'temp-write';
 import execa from 'execa';
 import { promisify } from 'util';
 import fs from 'fs';
 
+import tempy from 'tempy';
+
 const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+const unlinkFile = promisify(fs.unlink);
 
 const imageMimeTypes = [
   'image/jpeg',
   'image/webp',
 ];
 
-const arguments_ = [
+const imagemagickArguments = [
   // '-filter',  'Triangle',
   // '-define',  'filter:support=2',
   // '-unsharp', '0.25x0.25+8+0.065',
@@ -37,14 +40,20 @@ export async function pipeImage(response, request) {
     && newBody.length > 128
   ) {
     try {
-      const filePath = await tempWrite(newBody, 'img');
+      // const filePath = await tempWrite(newBody, 'img');
+      const fileToWrite = tempy.file({ extension: 'img' });
+      const fileConverted = tempy.file({ extension: 'webm' });
 
-      if (newBody.length > 1024 * 1024) {
-        await execa('convert', [filePath, '-resize', '50%', ...arguments_, `${filePath}.webp`]);
-      }else{
-        await execa('convert', [filePath, ...arguments_, `${filePath}.webp`]);
+      await writeFile(fileToWrite, newBody);
+
+      if (newBody.length > 1024 * 1024 * 3) {
+        await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
+      } else if (newBody.length > 1024 * 1024) {
+        await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
+      } else {
+        await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
       }
-      newBody = await readFile(`${filePath}.webp`);
+      newBody = await readFile(fileConverted);
 
       return {
         ...response,

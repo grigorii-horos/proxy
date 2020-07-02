@@ -1,9 +1,12 @@
-import tempWrite from 'temp-write';
 import execa from 'execa';
 import fs from 'fs';
 import { promisify } from 'util';
 
+import tempy from 'tempy';
+
 const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+const unlinkFile = promisify(fs.unlink);
 
 /**
  * @param response
@@ -17,18 +20,24 @@ export async function pipeSvg(response, request) {
      && newBody.length > 128
   ) {
     try {
-      const filePath = await tempWrite(newBody, 'img.svg');
+      const fileToWrite = tempy.file({ extension: 'svg' });
+      const fileConverted = tempy.file({ extension: 'svg' });
 
-     console.log('++++', await execa('svgcleaner', [filePath, `${filePath}.tmp.svg`]))
+      await writeFile(fileToWrite, newBody);
+      console.log(fileToWrite, fileConverted);
 
-      newBody = await readFile(`${filePath}.tmp.svg`);
+      console.log(await execa('svgcleaner', [fileToWrite, fileConverted]));
+
+      newBody = await readFile(fileConverted);
+
+      unlinkFile(fileToWrite);
+      unlinkFile(fileConverted);
 
       return {
         ...response,
         body: newBody,
       };
     } catch (error) {
-      console.log('-----', error);
       return response;
     }
   }
