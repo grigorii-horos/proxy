@@ -17,7 +17,6 @@ const imagemagickArguments = [
   '-filter', 'Triangle',
   '-define', 'filter:support=2',
   '-unsharp', '0.25x0.25+8+0.065',
-  '-dither', 'None',
   '-interlace', 'none',
   '-colorspace', 'sRGB',
   '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=40,auto-filter=true,lossless=false,method=5,thread-level=8',
