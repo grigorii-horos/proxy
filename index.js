@@ -47,7 +47,7 @@ const options = {
       const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
       if (await fsExistsAsync(cacheFile)) {
-        const [contentType, contentEncoding] = (await readFile(`${cacheFile}.meta`)).toString().split('\n');
+        const headersMeta = JSON.parse((await readFile(`${cacheFile}.json`)).toString());
         console.log('File in cache', cacheFile);
 
         if (headers['if-none-match'] && `"${hashFile}"` === headers['if-none-match']) {
@@ -64,8 +64,7 @@ const options = {
           response: {
             statusCode: 200,
             header: {
-              'content-type': contentType,
-              'content-encoding': contentEncoding,
+              ...headersMeta,
               'cache-control': 'public, immutable, max-age=31536000',
               expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
               etag: `"${hashFile}"`,

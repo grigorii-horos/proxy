@@ -32,12 +32,8 @@ export async function pipeSaveToCache(response, request) {
     const writeFS = async (cacheFile) => {
       const writeBody = writeFile(`${cacheFile}.tmp`, newBody);
       const writeMeta = writeFile(
-        `${cacheFile}.meta`,
-        `${
-          response.header['content-type']
-        }\n${
-          response.header['content-encoding']
-        }`,
+        `${cacheFile}.json`,
+        JSON.stringify(response.header),
       );
       await Promise.all([writeBody, writeMeta]);
       await fsRename(`${cacheFile}.tmp`, cacheFile);
