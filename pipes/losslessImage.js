@@ -19,10 +19,10 @@ const imagemagickArguments = [
   '-unsharp', '0.25x0.25+8+0.065',
   '-interlace', 'none',
   '-colorspace', 'sRGB',
-  '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=40,auto-filter=true,lossless=false,method=5,thread-level=8',
+  '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=40,auto-filter=true,lossless=false,method=5,thread-level=4',
   '-strip',
   '-auto-orient',
-  '-quality', '50',
+  '-quality', '40',
 ];
 
 /**
