@@ -45,11 +45,11 @@ export async function pipeLosslessImage(response, request) {
       await writeFile(fileToWrite, newBody);
 
       if (newBody.length > 1024 * 1024) {
-        await execa('gm', ['convert', fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
+        await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
       } else if (newBody.length > 256 * 1024) {
-        await execa('gm', ['convert', fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
+        await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
       } else {
-        await execa('gm', ['convert', fileToWrite, ...imagemagickArguments, fileConverted]);
+        await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
       }
 
       newBody = await readFile(fileConverted);

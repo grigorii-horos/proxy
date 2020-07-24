@@ -45,11 +45,11 @@ export async function pipeImage(response, request) {
       await writeFile(fileToWrite, newBody);
 
       if (newBody.length > 512 * 1024) {
-        await execa('gm', ['convert', fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
+        await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
       } else if (newBody.length > 128 * 1024) {
-        await execa('gm', ['convert', fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
+        await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
       } else {
-        await execa('gm', ['convert', fileToWrite, ...imagemagickArguments, fileConverted]);
+        await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
       }
 
       newBody = await readFile(fileConverted);
@@ -69,7 +69,7 @@ export async function pipeImage(response, request) {
         },
       };
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return response;
     }
   }
