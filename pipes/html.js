@@ -21,6 +21,10 @@ export async function pipeHtml(response, request) {
 
     return {
       ...response,
+      header: {
+        ...response.header,
+        'access-control-allow-origin': '*',
+      },
       body: bodyString,
     };
   }

@@ -22,7 +22,6 @@ export async function pipeCache(response) {
       ...response,
       header: {
         ...response.header,
-        'access-control-allow-origin': '*',
         'cache-control': 'public, immutable, max-age=31536000',
         expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
       },
