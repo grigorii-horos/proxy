@@ -10,8 +10,7 @@ export async function pipeHtml(response, request) {
   ) {
     let bodyString = (await response.body).toString();
 
-    bodyString = replaceAll(bodyString, '<img', '<img loading="lazy"');
-    bodyString = replaceAll(bodyString, '<iframe', '<iframe loading="lazy"');
+    bodyString = replaceAll(bodyString, /<(img|iframe)/gm, '<$1 loading="lazy"');
     bodyString = replaceAll(bodyString, /(<(?:script|link).*)integrity=(:?'|")sha512-.*?(:?'|")/gm, '$1');
 
     return {
