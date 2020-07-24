@@ -1,4 +1,4 @@
-import fs, { writeFileSync } from 'fs';
+import fs from 'fs';
 import { promisify } from 'util';
 import crypto from 'crypto';
 

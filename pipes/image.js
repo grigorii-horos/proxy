@@ -1,4 +1,3 @@
-import tempWrite from 'temp-write';
 import execa from 'execa';
 import { promisify } from 'util';
 import fs from 'fs';
@@ -15,17 +14,16 @@ const imageMimeTypes = [
 ];
 
 const imagemagickArguments = [
-  // '-filter',  'Triangle',
-  // '-define',  'filter:support=2',
-  // '-unsharp', '0.25x0.25+8+0.065',
-  // '-dither', 'None',
-  // '-posterize', '136',
-  // '-interlace', 'none',
+  '-filter', 'Triangle',
+  '-define', 'filter:support=2',
+  '-unsharp', '0.25x0.25+8+0.065',
+  '-dither', 'None',
+  '-interlace', 'none',
   '-colorspace', 'sRGB',
   '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=8',
   '-strip',
   '-auto-orient',
-  '-quality', '50',
+  '-quality', '40',
 ];
 
 /**
@@ -47,9 +45,9 @@ export async function pipeImage(response, request) {
 
       await writeFile(fileToWrite, newBody);
 
-      if (newBody.length > 1024 * 1024) {
+      if (newBody.length > 512 * 1024) {
         await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
-      } else if (newBody.length > 256 * 1024) {
+      } else if (newBody.length > 128 * 1024) {
         await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
       } else {
         await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);

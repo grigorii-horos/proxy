@@ -2,11 +2,6 @@
  * @param response
  */
 export async function pipeHeadersClean(response) {
-  // delete response?.header['access-control-allow-credentials'];
-  // delete response?.header['access-control-allow-methods'];
-  // delete response?.header['access-control-allow-origin'];
-  // delete response?.header['access-control-expose-headers'];
-  // delete response?.header['transfer-encoding'];
   delete response?.header.age;
   delete response?.header.date;
   delete response?.header.nel;
