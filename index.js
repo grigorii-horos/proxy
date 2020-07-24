@@ -61,12 +61,7 @@ const options = {
         return {
           response: {
             statusCode: 200,
-            header: {
-              ...headersMeta,
-              'cache-control': 'public, immutable, max-age=31536000',
-              expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
-              etag: `"${hashFile}"`,
-            },
+            header: headersMeta,
             body: await readFile(cacheFile),
           },
         };
