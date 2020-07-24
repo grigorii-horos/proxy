@@ -1,7 +1,6 @@
 import anyproxy from 'anyproxy';
 import crypto from 'crypto';
 import fs from 'fs';
-import sharp from 'sharp';
 
 import { promisify } from 'util';
 

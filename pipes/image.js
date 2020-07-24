@@ -22,10 +22,10 @@ const imagemagickArguments = [
   // '-posterize', '136',
   // '-interlace', 'none',
   '-colorspace', 'sRGB',
-  '-define', 'webp:image-hint=photo,partition-limit=90,method=4,thread-level=8',
+  '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=8',
   '-strip',
   '-auto-orient',
-  '-quality', '60',
+  '-quality', '50',
 ];
 
 /**
@@ -47,13 +47,14 @@ export async function pipeImage(response, request) {
 
       await writeFile(fileToWrite, newBody);
 
-      if (newBody.length > 1024 * 1024 * 3) {
+      if (newBody.length > 1024 * 1024) {
         await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
-      } else if (newBody.length > 1024 * 1024) {
+      } else if (newBody.length > 256 * 1024) {
         await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
       } else {
         await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
       }
+
       newBody = await readFile(fileConverted);
       unlinkFile(fileToWrite);
       unlinkFile(fileConverted);
