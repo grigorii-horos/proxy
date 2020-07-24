@@ -68,7 +68,7 @@ export async function pipeImage(response, request) {
         body: newBody,
         header: {
           ...response.header,
-          'content-type': 'image/webp', // response.header['content-type'],
+          'content-type': 'image/webp',
         },
       };
     } catch (error) {

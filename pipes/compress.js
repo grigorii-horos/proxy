@@ -5,11 +5,10 @@ const brotliCompress = promisify(zlib.brotliCompress);
 const gzCompress = promisify(zlib.gzip);
 
 const compressMimeTypes = [
-  'application/javascript',
-  'application/json',
-  'application/ld+json',
+  'application/',
   'text/',
   'image/',
+  'video/',
 ];
 
 /**
@@ -20,8 +19,6 @@ export async function pipeCompress(response, request) {
   if (
     compressMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
   ) {
-    //
-
     const newData = await response.body;
 
     if (request.protocol === 'http') {

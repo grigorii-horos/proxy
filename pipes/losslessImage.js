@@ -58,6 +58,7 @@ export async function pipeLosslessImage(response, request) {
       newBody = await readFile(fileConverted);
       unlinkFile(fileToWrite);
       unlinkFile(fileConverted);
+
       if (oldSize < newBody.length) {
         throw new Error('Converted file is bigger than original');
       }
@@ -67,7 +68,7 @@ export async function pipeLosslessImage(response, request) {
         body: newBody,
         header: {
           ...response.header,
-          'content-type': 'image/webp', // response.header['content-type'],
+          'content-type': 'image/webp',
         },
       };
     } catch (error) {

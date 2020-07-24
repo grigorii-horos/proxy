@@ -6,11 +6,11 @@ const writeFile = promisify(fs.writeFile);
 const fsRename = promisify(fs.rename);
 
 const cacheMimeTypes = [
-  'image/',
-  'text/plain',
   'text/javascript',
-  'text/css',
   'application/javascript',
+  'text/css',
+  'image/',
+  'font/',
 ];
 
 /**
