@@ -40,13 +40,11 @@ const options = {
         return requestDetail;
       }
 
-      const headers = lowercaseKeys(requestDetail.header || {});
-
       const hashFile = crypto.createHash('sha1').update(requestDetail.url).digest('hex');
-
       const cacheFile = `/home/grisa/.caa/${hashFile}`;
-
       if (await fsExistsAsync(cacheFile)) {
+        const headers = lowercaseKeys(requestDetail.header || {});
+
         const headersMeta = JSON.parse((await readFile(`${cacheFile}.json`)).toString());
         console.log('File in cache', cacheFile);
 

@@ -27,16 +27,21 @@ export async function pipeSaveToCache(response, request) {
   ) {
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
+    const headers = {
+      ...response.header,
+      etag: `"${hashFile}"`,
+    };
+
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
 
-    const writeFS = async (cacheFile) => {
-      const writeBody = writeFile(`${cacheFile}.tmp`, newBody);
+    const writeFS = async (file) => {
+      const writeBody = writeFile(`${file}.tmp`, newBody);
       const writeMeta = writeFile(
-        `${cacheFile}.json`,
-        JSON.stringify(response.header),
+        `${file}.json`,
+        JSON.stringify(headers),
       );
       await Promise.all([writeBody, writeMeta]);
-      await fsRename(`${cacheFile}.tmp`, cacheFile);
+      await fsRename(`${file}.tmp`, file);
     };
 
     writeFS(cacheFile);
@@ -44,10 +49,7 @@ export async function pipeSaveToCache(response, request) {
     console.log('Save to cache', cacheFile);
     return {
       ...response,
-      header: {
-        ...response.header,
-        etag: `"${hashFile}"`,
-      },
+      header: headers,
     };
   }
 
