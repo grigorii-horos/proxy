@@ -70,6 +70,7 @@ export async function pipeImage(response, request) {
         },
       };
     } catch (error) {
+      console.log(error)
       return response;
     }
   }
