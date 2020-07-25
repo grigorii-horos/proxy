@@ -31,6 +31,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-cache-hits'];
   delete response?.header['x-cache'];
   delete response?.header['x-cf-worker'];
+  delete response?.header['x-content-security-policy'];
   delete response?.header['x-content-type-options'];
   delete response?.header['x-dns-prefetch-control'];
   delete response?.header['x-fastly-request-id'];
@@ -38,6 +39,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-flags'];
   delete response?.header['x-frame-options'];
   delete response?.header['x-frontend'];
+  delete response?.header['x-gateway'];
   delete response?.header['x-github-request-id'];
   delete response?.header['x-http-count'];
   delete response?.header['x-http-duration-ms'];
@@ -51,6 +53,8 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-redis-count'];
   delete response?.header['x-redis-duration-ms'];
   delete response?.header['x-request-guid'];
+  delete response?.header['x-request-id'];
+  delete response?.header['x-response-from'];
   delete response?.header['x-route-name'];
   delete response?.header['x-served-by'];
   delete response?.header['x-sql-count'];
