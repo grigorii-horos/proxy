@@ -22,7 +22,7 @@ const imagemagickArguments = [
   '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=4',
   '-strip',
   '-auto-orient',
-  '-quality', '30',
+  '-quality', '45',
 ];
 
 /**
