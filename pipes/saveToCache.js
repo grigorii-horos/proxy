@@ -28,8 +28,11 @@ export async function pipeSaveToCache(response, request) {
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
     const headers = {
-      ...response.header,
-      etag: `"${hashFile}"`,
+      'content-type': response.header['content-type'],
+      'access-control-allow-origin': response.header['access-control-allow-origin'],
+      'cache-control': response.header['cache-control'],
+      etag: response.header.etag,
+      'access-control-allow-methods': response.header['access-control-allow-methods'],
     };
 
     const cacheFile = `/home/grisa/.caa/${hashFile}`;
@@ -49,7 +52,10 @@ export async function pipeSaveToCache(response, request) {
     console.log('Save to cache', request.url);
     return {
       ...response,
-      header: headers,
+      header: {
+        ...response.header,
+        etag: `"${hashFile}"`,
+      },
     };
   }
 
