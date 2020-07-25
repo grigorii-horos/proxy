@@ -29,6 +29,7 @@ export async function pipeSaveToCache(response, request) {
 
     const headers = {
       'content-type': response.header['content-type'],
+      'content-encoding': response.header['content-encoding'],
       'access-control-allow-origin': response.header['access-control-allow-origin'],
       'cache-control': response.header['cache-control'],
       etag: response.header.etag,
