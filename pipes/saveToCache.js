@@ -29,6 +29,7 @@ export async function pipeSaveToCache(response, request) {
 
     const headers = response.header;
     delete headers.etag;
+    delete headers['set-cookie'];
 
     const ff = {
       'content-type': response.header['content-type'],
