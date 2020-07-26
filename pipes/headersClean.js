@@ -134,6 +134,11 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
   delete response?.header['x-zone'];
+  delete response?.header['x-fb-trip-id'];
+  delete response?.header['x-needle-checksum'];
+  delete response?.header['x-fb-trip-id'];
+  delete response?.header['gdfgdfgfd'];
+  delete response?.header['gdfgdfgfd'];
 
   return response;
 }
