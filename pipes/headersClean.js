@@ -1,14 +1,10 @@
 const keepHeaders = ([
-  // 'accept-patch',
-  // 'accept-ranges',
-  'access-control-allow-',
+  'access-control-allow-', // *
   'age',
   'allow',
-  // 'alt-svc',
   'authorization',
   'cache-control',
-  // 'connection',
-  'content-',
+  'content-', // *
   'date',
   'delta-base',
   'etag',
@@ -19,7 +15,6 @@ const keepHeaders = ([
   'location',
   'pragma',
   'proxy-authenticate',
-  // 'public-key-pins',
   'public',
   'retry-after',
   'server',
@@ -29,10 +24,16 @@ const keepHeaders = ([
   'trailer',
   'transfer-encoding',
   'upgrade',
-  'vary',
-  'via',
   'warning',
   'www-authenticate',
+  // 'accept-patch',
+  // 'accept-ranges',
+  // 'alt-svc',
+  // 'connection',
+  // 'public-key-pins',
+  // 'server',
+  // 'vary',
+  // 'via',
 ]);
 
 /**
@@ -49,7 +50,7 @@ export function pipeHeadersClean(response) {
   }
 
   const headers = Object.fromEntries(Object.entries(response.header)
-    .filter(([key, value]) => ([...keepHeaders, ...allowHeaders]
+    .filter(([key]) => ([...keepHeaders, ...allowHeaders]
       .filter((keepHeader) => {
         if (key.startsWith(keepHeader)) {
           return true;
