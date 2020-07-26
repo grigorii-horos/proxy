@@ -28,9 +28,7 @@ export async function pipeSaveToCache(response, request) {
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
     const headers = response.header;
-    delete headers['accept-ranges'];
-    delete headers['etag'];
-    delete headers['alt-svc'];
+    delete headers.etag;
 
     const ff = {
       'content-type': response.header['content-type'],

@@ -10,9 +10,10 @@ export async function pipeHeadersClean(response) {
   delete response?.header.p3p;
   delete response?.header.pragma;
   delete response?.header.server;
-  delete response?.header['server-timing'];
   delete response?.header.vary;
   delete response?.header.via;
+  delete response?.header['accept-ranges'];
+  delete response?.header['alt-svc'];
   delete response?.header['cf-bgj'];
   delete response?.header['cf-cache-status'];
   delete response?.header['cf-polished'];
@@ -24,8 +25,10 @@ export async function pipeHeadersClean(response) {
   delete response?.header['last-modified'];
   delete response?.header['public-key-pins'];
   delete response?.header['report-to'];
+  delete response?.header['server-timing'];
   delete response?.header['source-age'];
   delete response?.header['timing-allow-origin'];
+  delete response?.header['transfer-encoding'];
   delete response?.header['x-amz-cf-id'];
   delete response?.header['x-amz-cf-pop'];
   delete response?.header['x-anyproxy-origin-connection'];
