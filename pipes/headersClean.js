@@ -5,12 +5,15 @@ export async function pipeHeadersClean(response) {
   delete response?.header.age;
   delete response?.header.connection;
   delete response?.header.date;
+  delete response?.header.eagleid;
   delete response?.header.fw_ip;
   delete response?.header.link;
   delete response?.header.nel;
   delete response?.header.network_info;
   delete response?.header.p3p;
   delete response?.header.pragma;
+  delete response?.header.s_tag;
+  delete response?.header.s_tid;
   delete response?.header.server;
   delete response?.header.vary;
   delete response?.header.via;
@@ -42,6 +45,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-anyproxy-origin-connection'];
   delete response?.header['x-anyproxy-origin-content-encoding'];
   delete response?.header['x-anyproxy-origin-content-length'];
+  delete response?.header['x-application-context'];
   delete response?.header['x-aspnet-duration-ms'];
   delete response?.header['x-cache-hits'];
   delete response?.header['x-cache-status'];
@@ -64,6 +68,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-http-duration-ms'];
   delete response?.header['x-is-crawler'];
   delete response?.header['x-oss-hash-crc64ecma'];
+  delete response?.header['x-oss-meta-file-type'];
   delete response?.header['x-oss-meta-filename'];
   delete response?.header['x-oss-object-type'];
   delete response?.header['x-oss-request-id '];
