@@ -23,8 +23,8 @@ const compressMimeTypes = {
  */
 export async function pipeCompress(response, request) {
   if (
-    compressMimeTypes.filter((mime) => response?.header['content-type']
-      ?.startsWith([...mime.text, ...mime.generic, ...mime.font])).length > 0
+    [...mime.text, ...mime.generic, ...mime.font].filter((mime) => response?.header['content-type']
+      ?.startsWith(mime)).length > 0
   ) {
     const newData = await response.body;
     try {
@@ -44,13 +44,13 @@ export async function pipeCompress(response, request) {
 
       let mode = zlib.constants.BROTLI_MODE_GENERIC;
       if (
-        compressMimeTypes.filter((mime) => response?.header['content-type']
-          ?.startsWith(mime.text)).length > 0
+        compressMimeTypes.text.filter((mime) => response?.header['content-type']
+          ?.startsWith(mime)).length > 0
       ) {
         mode = zlib.constants.BROTLI_MODE_TEXT;
       } else if (
-        compressMimeTypes.filter((mime) => response?.header['content-type']
-          ?.startsWith(mime.font)).length > 0
+        compressMimeTypes.font.filter((mime) => response?.header['content-type']
+          ?.startsWith(mime)).length > 0
       ) {
         mode = zlib.constants.BROTLI_MODE_FONT;
       }
