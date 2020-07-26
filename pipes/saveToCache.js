@@ -54,7 +54,6 @@ export async function pipeSaveToCache(response, request) {
 
     writeFS(cacheFile);
 
-    console.log('Save to cache', request.url);
     return {
       ...response,
       header: {

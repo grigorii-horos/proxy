@@ -24,9 +24,8 @@ export async function pipeSvg(response, request) {
       const fileConverted = tempy.file({ extension: 'svg' });
 
       await writeFile(fileToWrite, newBody);
-      console.log(fileToWrite, fileConverted);
 
-      console.log(await execa('svgcleaner', [fileToWrite, fileConverted]));
+      await execa('svgcleaner', [fileToWrite, fileConverted])
 
       newBody = await readFile(fileConverted);
 

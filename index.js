@@ -46,7 +46,6 @@ const options = {
         const headers = lowercaseKeys(requestDetail.header || {});
 
         const headersMeta = JSON.parse((await readFile(`${cacheFile}.json`)).toString());
-        console.log('File in cache', requestDetail.url);
 
         if (headers['if-none-match'] && `"${hashFile}"` === headers['if-none-match']) {
           console.log('ETag detect');
