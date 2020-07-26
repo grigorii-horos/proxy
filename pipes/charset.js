@@ -22,7 +22,8 @@ export async function pipeCharset(response, request) {
     response?.header['content-type'] === 'text/html'
     ) {
       const match = jschardet.detect(response.body);
-      if (match.confidence > 0.95) {
+      console.log(match)
+      if (match.confidence > 0.90) {
         charsetDetect = match.encoding;
       }
     }
