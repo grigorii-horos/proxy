@@ -18,12 +18,14 @@ export async function pipeCharset(response, request) {
   ) {
     let charsetDetect = charset(response?.header['content-type']);
 
+    console.log(response.body.toString().matchAll(/<meta.*content=["'].*charset=([\w-]+)/gim));
+
     if (
       !response?.header['content-type'].includes(';charset=')
     ) {
-      const match = jschardet.detect(response.body);
-      if (match.confidence > 0.9) {
-        charsetDetect = match.encoding;
+      const match = [...response.body.toString().matchAll(/<meta.*content=["'].*charset=([\w-]+)/gim)].map((m) => m[1])[0];
+      if (match) {
+        charsetDetect = match;
       }
     }
 
