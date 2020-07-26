@@ -120,9 +120,9 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-ezoic-cdn'];
   delete response?.header['x-middleton-display'];
   delete response?.header['x-middleton-response'];
-  delete response?.header['xsdfsd'];
-  delete response?.header['xsdfsd'];
-  delete response?.header['xsdfsd'];
+  delete response?.header['request-context'];
+  delete response?.header['akamai-cache-status'];
+  delete response?.header['keep-alive'];
   delete response?.header['xsdfsd'];
   delete response?.header['xsdfsd'];
   delete response?.header['xsdfsd'];
