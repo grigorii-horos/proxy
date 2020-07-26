@@ -29,6 +29,7 @@ export async function pipeSaveToCache(response, request) {
 
     const headers = response.header;
     delete headers['accept-ranges'];
+    delete headers['etag'];
     delete headers['alt-svc'];
 
     const ff = {

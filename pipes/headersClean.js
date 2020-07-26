@@ -10,6 +10,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header.p3p;
   delete response?.header.pragma;
   delete response?.header.server;
+  delete response?.header['server-timing'];
   delete response?.header.vary;
   delete response?.header.via;
   delete response?.header['cf-bgj'];
