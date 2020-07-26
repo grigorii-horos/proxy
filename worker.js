@@ -15,6 +15,7 @@ import { pipeSvg } from './pipes/svg.js';
   const { request, response } = workerData;
   let newResponse = response;
   console.time(request.url);
+  const oldSize = request.body.length;
 
   newResponse = {
     ...newResponse,
@@ -41,6 +42,9 @@ import { pipeSvg } from './pipes/svg.js';
     body: await newResponse.body,
   };
   console.timeEnd(request.url);
+
+  const newSize = newResponse.body.length;
+  console.log(request.url, oldSize, newSize, (newSize / oldSize) * 100);
 
   parentPort.postMessage(newResponse);
 })();
