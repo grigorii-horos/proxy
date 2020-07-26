@@ -65,6 +65,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
   delete response?.header['x-cache-status'];
+  delete response?.header['link'];
 
   return response;
 }
