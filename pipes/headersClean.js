@@ -12,6 +12,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header.network_info;
   delete response?.header.p3p;
   delete response?.header.pragma;
+  delete response?.header.response;
   delete response?.header.s_tag;
   delete response?.header.s_tid;
   delete response?.header.server;
@@ -83,6 +84,8 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-fb-config-version-flb-prod'];
   delete response?.header['x-fb-config-version-olb-prod'];
   delete response?.header['x-fb-debug'];
+  delete response?.header['x-fb-trip-id'];
+  delete response?.header['x-fb-trip-id'];
   delete response?.header['x-flags'];
   delete response?.header['x-frame-options'];
   delete response?.header['x-frontend'];
@@ -97,6 +100,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-middleton-display'];
   delete response?.header['x-middleton-response'];
   delete response?.header['x-nc'];
+  delete response?.header['x-needle-checksum'];
   delete response?.header['x-oss-hash-crc64ecma'];
   delete response?.header['x-oss-meta-file-type'];
   delete response?.header['x-oss-meta-filename'];
@@ -119,6 +123,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-route-name'];
   delete response?.header['x-serial'];
   delete response?.header['x-served-by'];
+  delete response?.header['x-sol'];
   delete response?.header['x-source-scheme'];
   delete response?.header['x-sql-count'];
   delete response?.header['x-sql-duration-ms'];
@@ -134,11 +139,6 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
   delete response?.header['x-zone'];
-  delete response?.header['x-fb-trip-id'];
-  delete response?.header['x-needle-checksum'];
-  delete response?.header['x-fb-trip-id'];
-  delete response?.header['gdfgdfgfd'];
-  delete response?.header['gdfgdfgfd'];
 
   return response;
 }
