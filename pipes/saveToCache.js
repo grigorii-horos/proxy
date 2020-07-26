@@ -23,7 +23,7 @@ export async function pipeSaveToCache(response, request) {
     response?.statusCode === 200
     && cacheMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
     && request.requestOptions.method === 'GET'
-    && newBody.length > 128
+    && newBody.length > 16
   ) {
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
