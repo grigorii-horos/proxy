@@ -14,7 +14,8 @@ import { pipeSvg } from './pipes/svg.js';
 (async () => {
   const { request, response } = workerData;
   let newResponse = response;
-  console.time(request.url);
+  const start = new Date();
+
   const oldSize = newResponse.body.length;
 
   newResponse = {
@@ -41,10 +42,9 @@ import { pipeSvg } from './pipes/svg.js';
     ...newResponse,
     body: await newResponse.body,
   };
-  console.timeEnd(request.url);
-
+  const end = new Date() - start;
   const newSize = newResponse.body.length;
-  console.log(request.url, oldSize, newSize, (newSize / oldSize) * 100);
+  console.log(request.url, 'Execution time -', end, 'Compression', `${oldSize}/${newSize}`, `${(newSize / oldSize) * 100}%`);
 
   parentPort.postMessage(newResponse);
 })();
