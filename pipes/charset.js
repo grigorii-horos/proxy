@@ -20,7 +20,8 @@ export async function pipeCharset(response, request) {
     if (
     response?.header['content-type'] === 'text/html'
     ) {
-      console.log('---',response.body.toString().matchAll(/<meta.*content=["'].*charset=([\w-]*)["']/gim))
+      console.log('---',Array.from(response.body.toString().matchAll(/<meta.*content=["'].*charset=([\w-]*)["']/gim), m => m[0]);
+)
       const match = response.body.toString().match(/<meta.*content=["'].*charset=([\w-]*)["']/gim)[1];
       if (match) {
         charsetDetect = match;
