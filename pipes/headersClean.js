@@ -3,6 +3,7 @@
  */
 export async function pipeHeadersClean(response) {
   delete response?.header.age;
+  delete response?.header.connection;
   delete response?.header.date;
   delete response?.header.nel;
   delete response?.header.p3p;
@@ -31,6 +32,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-cache-hits'];
   delete response?.header['x-cache'];
   delete response?.header['x-cf-worker'];
+  delete response?.header['x-client-ip'];
   delete response?.header['x-content-security-policy'];
   delete response?.header['x-content-type-options'];
   delete response?.header['x-dns-prefetch-control'];
@@ -62,6 +64,7 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-timer'];
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
+  delete response?.header['x-cache-status'];
 
   return response;
 }
