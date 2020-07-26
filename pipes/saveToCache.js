@@ -27,7 +27,9 @@ export async function pipeSaveToCache(response, request) {
   ) {
     const hashFile = crypto.createHash('sha1').update(request.url).digest('hex');
 
-    const headers = {
+    const headers = response.header;
+
+    const ff = {
       'content-type': response.header['content-type'],
       'content-encoding': response.header['content-encoding'],
       'access-control-allow-origin': response.header['access-control-allow-origin'],
