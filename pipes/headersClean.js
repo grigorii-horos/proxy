@@ -5,8 +5,10 @@ export async function pipeHeadersClean(response) {
   delete response?.header.age;
   delete response?.header.connection;
   delete response?.header.date;
+  delete response?.header.fw_ip;
   delete response?.header.link;
   delete response?.header.nel;
+  delete response?.header.network_info;
   delete response?.header.p3p;
   delete response?.header.pragma;
   delete response?.header.server;
@@ -22,14 +24,14 @@ export async function pipeHeadersClean(response) {
   delete response?.header['cf-request-id'];
   delete response?.header['content-length'];
   delete response?.header['content-md5'];
+  delete response?.header['eagleeye-traceid'];
   delete response?.header['expect-ct'];
   delete response?.header['feature-policy'];
+  delete response?.header['from-req-dns-type'];
   delete response?.header['last-modified'];
   delete response?.header['public-key-pins'];
   delete response?.header['report-to'];
   delete response?.header['s-rt'];
-  delete response?.header['served-from'];
-  delete response?.header['served-from'];
   delete response?.header['served-from'];
   delete response?.header['server-timing'];
   delete response?.header['source-age'];
@@ -37,7 +39,6 @@ export async function pipeHeadersClean(response) {
   delete response?.header['transfer-encoding'];
   delete response?.header['x-amz-cf-id'];
   delete response?.header['x-amz-cf-pop'];
-  delete response?.header['x-anyproxy-origin-connection'];
   delete response?.header['x-anyproxy-origin-connection'];
   delete response?.header['x-anyproxy-origin-content-encoding'];
   delete response?.header['x-anyproxy-origin-content-length'];
@@ -63,11 +64,10 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-http-duration-ms'];
   delete response?.header['x-is-crawler'];
   delete response?.header['x-oss-hash-crc64ecma'];
-  delete response?.header['x-oss-hash-crc64ecma'];
   delete response?.header['x-oss-meta-filename'];
   delete response?.header['x-oss-object-type'];
-  delete response?.header['x-oss-object-type'];
   delete response?.header['x-oss-request-id '];
+  delete response?.header['x-oss-request-id'];
   delete response?.header['x-oss-server-time'];
   delete response?.header['x-oss-storage-class'];
   delete response?.header['x-page-view'];
@@ -82,14 +82,19 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-request-id'];
   delete response?.header['x-response-from'];
   delete response?.header['x-route-name'];
+  delete response?.header['x-serial'];
   delete response?.header['x-served-by'];
+  delete response?.header['x-source-scheme'];
   delete response?.header['x-sql-count'];
   delete response?.header['x-sql-duration-ms'];
   delete response?.header['x-swift-cachetime'];
   delete response?.header['x-swift-savetime'];
   delete response?.header['x-timer'];
+  delete response?.header['x-varnish-cache'];
+  delete response?.header['x-vimeo-dc'];
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
+  delete response?.header['x-zone'];
 
   return response;
 }
