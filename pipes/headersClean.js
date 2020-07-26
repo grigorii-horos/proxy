@@ -38,8 +38,7 @@ const keepHeaders = ([
 /**
  * @param response
  */
-export function pipeHeadersClean(response) {
-  let allowHeaders = [];
+export async function pipeHeadersClean(response) {
   if (response.header && response.header['access-control-allow-headers'] === '*') {
     return response;
   }
