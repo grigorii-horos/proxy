@@ -15,7 +15,16 @@ export async function pipeCharset(response, request) {
   if (
     convertCharsetMimes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
   ) {
-    const charsetDetect = charset(response?.header['content-type']);
+    let charsetDetect = charset(response?.header['content-type']);
+
+    if (
+    response?.header['content-type'] === 'text/html'
+    ) {
+      const match = response.body.toString().match(/<meta.*content=["'].*charset=([\w-]*)["']/gim)[0];
+      if (match) {
+        charsetDetect = match;
+      }
+    }
 
     let bodyString;
     if (charsetDetect && charsetDetect !== 'utf-8') {
