@@ -15,7 +15,7 @@ import { pipeSvg } from './pipes/svg.js';
   const { request, response } = workerData;
   let newResponse = response;
   console.time(request.url);
-  const oldSize = request.body.length;
+  const oldSize = newResponse.body.length;
 
   newResponse = {
     ...newResponse,
