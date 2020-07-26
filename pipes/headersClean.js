@@ -44,7 +44,7 @@ export async function pipeHeadersClean(response) {
   }
 
   const headers = Object.fromEntries(Object.entries(response.header)
-    .filter(([key]) => ([...keepHeaders, ...allowHeaders]
+    .filter(([key]) => (keepHeaders
       .filter((keepHeader) => {
         if (key.startsWith(keepHeader)) {
           return true;
