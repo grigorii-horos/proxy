@@ -5,6 +5,7 @@ import jschardet from 'jschardet';
 const convertCharsetMimes = [
   'text/',
   'application/javascript',
+  'application/x-javascript',
   'application/json',
 ];
 

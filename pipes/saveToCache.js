@@ -8,6 +8,7 @@ const fsRename = promisify(fs.rename);
 const cacheMimeTypes = [
   'text/javascript',
   'application/javascript',
+  'application/x-javascript',
   'text/css',
   'image/',
   'font/',
