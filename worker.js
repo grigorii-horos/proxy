@@ -14,6 +14,7 @@ import { pipeSvg } from './pipes/svg.js';
 (async () => {
   const { request, response } = workerData;
   let newResponse = response;
+  console.time(request.url);
 
   newResponse = {
     ...newResponse,
@@ -39,6 +40,7 @@ import { pipeSvg } from './pipes/svg.js';
     ...newResponse,
     body: await newResponse.body,
   };
+  console.timeEnd(request.url);
 
   parentPort.postMessage(newResponse);
 })();
