@@ -1,5 +1,6 @@
 import charset from 'charset';
 import iconv from 'iconv-lite';
+import jschardet from 'jschardet';
 
 const convertCharsetMimes = [
   'text/',
@@ -20,10 +21,9 @@ export async function pipeCharset(response, request) {
     if (
     response?.header['content-type'] === 'text/html'
     ) {
-      console.log([...response.body.toString().matchAll(/<meta.*content=["'].*charset=([\w-]*)["']/gim)]);
-      const match = response.body.toString().match(/<meta.*content=["'].*charset=([\w-]*)["']/gim)[1];
-      if (match) {
-        charsetDetect = match;
+      const match = jschardet.detect(response.body);
+      if (match.confidence > 0.95) {
+        charsetDetect = match.encoding;
       }
     }
 
