@@ -44,10 +44,6 @@ export function pipeHeadersClean(response) {
     return response;
   }
 
-  if (response.header && response.header['access-control-allow-headers']) {
-    allowHeaders = response.header['access-control-allow-headers'].split(' ').join('').split(',');
-  }
-
   const headers = Object.fromEntries(Object.entries(response.header)
     .filter(([key]) => ([...keepHeaders, ...allowHeaders]
       .filter((keepHeader) => {
