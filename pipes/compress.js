@@ -4,12 +4,18 @@ import zlib from 'zlib';
 const brotliCompress = promisify(zlib.brotliCompress);
 const gzCompress = promisify(zlib.gzip);
 
-const compressMimeTypes = [
-  'application/',
-  'text/',
-  'image/',
-  'video/',
-];
+const compressMimeTypes = {
+  text: [
+    'application/',
+    'text/',
+  ],
+  generic: [
+    'image/',
+  ],
+  font: [
+    'font/',
+  ],
+};
 
 /**
  * @param response
@@ -17,33 +23,46 @@ const compressMimeTypes = [
  */
 export async function pipeCompress(response, request) {
   if (
-    compressMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
+    compressMimeTypes.filter((mime) => response?.header['content-type']
+      ?.startsWith([...mime.text, ...mime.generic, ...mime.font])).length > 0
   ) {
     const newData = await response.body;
-
-    if (request.protocol === 'http') {
-      return {
-        ...response,
-        // @ts-ignore
-        body: gzCompress(newData, {
-          level: 6,
-        }),
-        header: {
-          ...response.header,
-          'content-encoding': 'gzip',
-        },
-      };
-    }
-
     try {
+      if (request.protocol === 'http') {
+        return {
+          ...response,
+          // @ts-ignore
+          body: gzCompress(newData, {
+            level: 6,
+          }),
+          header: {
+            ...response.header,
+            'content-encoding': 'gzip',
+          },
+        };
+      }
+
+      let mode = zlib.constants.BROTLI_MODE_GENERIC;
+      if (
+        compressMimeTypes.filter((mime) => response?.header['content-type']
+          ?.startsWith(mime.text)).length > 0
+      ) {
+        mode = zlib.constants.BROTLI_MODE_TEXT;
+      } else if (
+        compressMimeTypes.filter((mime) => response?.header['content-type']
+          ?.startsWith(mime.font)).length > 0
+      ) {
+        mode = zlib.constants.BROTLI_MODE_FONT;
+      }
+
       return {
         ...response,
         // @ts-ignore
         body: brotliCompress(newData, {
           chunkSize: 32 * 1024,
           params: {
-            [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-            [zlib.constants.BROTLI_PARAM_QUALITY]: 1,
+            [zlib.constants.BROTLI_PARAM_MODE]: mode,
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 6,
             // @ts-ignore
             [zlib.constants.BROTLI_PARAM_SIZE_HINT]: newData.length,
           },
@@ -55,15 +74,6 @@ export async function pipeCompress(response, request) {
       };
     } catch (error) {
       console.log('*************');
-      console.log(newData, {
-        chunkSize: 32 * 1024,
-        params: {
-          [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
-          [zlib.constants.BROTLI_PARAM_QUALITY]: 1,
-          // @ts-ignore
-          [zlib.constants.BROTLI_PARAM_SIZE_HINT]: newData.length,
-        },
-      });
       console.log(error);
       console.log('*************');
     }
