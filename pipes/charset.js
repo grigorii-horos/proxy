@@ -34,7 +34,7 @@ export async function pipeCharset(response, request) {
     } else {
       bodyString = (response.body);
     }
-    console.time(request.url);
+    console.timeEnd(request.url);
 
     return {
       ...response,
