@@ -109,6 +109,24 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
   delete response?.header['x-zone'];
+  delete response?.header['x-nc'];
+  delete response?.header['fastly-io-info'];
+  delete response?.header['fastly-stats'];
+  delete response?.header['fastly-io-info'];
+  delete response?.header['x-datacenter'];
+  delete response?.header['x-ua-compatible'];
+  delete response?.header['display'];
+  delete response?.header['fastly-io-warning'];
+  delete response?.header['x-ezoic-cdn'];
+  delete response?.header['x-middleton-display'];
+  delete response?.header['x-middleton-response'];
+  delete response?.header['xsdfsd'];
+  delete response?.header['xsdfsd'];
+  delete response?.header['xsdfsd'];
+  delete response?.header['xsdfsd'];
+  delete response?.header['xsdfsd'];
+  delete response?.header['xsdfsd'];
+  delete response?.header['xsdfsd'];
 
   return response;
 }
