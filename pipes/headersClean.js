@@ -17,7 +17,6 @@ const keepHeaders = ([
   'proxy-authenticate',
   'public',
   'retry-after',
-  'server',
   'set-cookie',
   'strict-transport-security',
   'tk',
