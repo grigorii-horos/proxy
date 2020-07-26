@@ -16,6 +16,7 @@ export async function pipeCharset(response, request) {
   if (
     convertCharsetMimes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
   ) {
+    console.time(request.url);
     let charsetDetect = charset(response?.header['content-type']);
 
     if (
@@ -33,6 +34,7 @@ export async function pipeCharset(response, request) {
     } else {
       bodyString = (response.body);
     }
+    console.time(request.url);
 
     return {
       ...response,
