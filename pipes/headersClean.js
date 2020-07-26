@@ -91,7 +91,10 @@ export async function pipeHeadersClean(response) {
   delete response?.header['x-swift-savetime'];
   delete response?.header['x-timer'];
   delete response?.header['x-varnish-cache'];
+  delete response?.header['x-varnish-cache'];
   delete response?.header['x-vimeo-dc'];
+  delete response?.header['x-vimeo-dc'];
+  delete response?.header['x-vserver'];
   delete response?.header['x-xss-protection'];
   delete response?.header['x-xss-pwnage'];
   delete response?.header['x-zone'];
