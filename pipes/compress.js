@@ -79,6 +79,7 @@ export async function pipeCompress(response, request) {
       console.log('*************');
       console.log(error);
       console.log('*************');
+      return response;
     }
   }
 

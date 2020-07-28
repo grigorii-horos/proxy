@@ -11,6 +11,7 @@ const keepHeaders = ([
   'link',
   'location',
   'pragma',
+  'referrer-policy',
   'set-cookie',
   'strict-transport-security',
   'transfer-encoding',
@@ -37,10 +38,6 @@ const keepHeaders = ([
  * @param response
  */
 export async function pipeHeadersClean(response) {
-  if (response.header && response.header['access-control-allow-headers'] === '*') {
-    return response;
-  }
-
   const headers = Object.fromEntries(Object.entries(response.header)
     .filter(([key]) => (keepHeaders
       .filter((keepHeader) => {
