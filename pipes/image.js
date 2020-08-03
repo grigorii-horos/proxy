@@ -44,10 +44,10 @@ export async function pipeImage(response, request) {
 
       await writeFile(fileToWrite, newBody);
 
-      if (newBody.length > 512 * 1024) {
-        await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
-      } else if (newBody.length > 128 * 1024) {
-        await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
+      if (newBody.length > 2 * 1024 * 1024) {
+        await execa('convert', [fileToWrite, '-resize', '60%', ...imagemagickArguments, fileConverted]);
+      } else if (newBody.length > 512 * 1024) {
+        await execa('convert', [fileToWrite, '-resize', '80%', ...imagemagickArguments, fileConverted]);
       } else {
         await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
       }
