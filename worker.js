@@ -1,5 +1,5 @@
+import prettysize from 'prettysize';
 import { parentPort, workerData } from 'worker_threads';
-
 import { pipeCache } from './pipes/cache.js';
 import { pipeCharset } from './pipes/charset.js';
 import { pipeCompress } from './pipes/compress.js';
@@ -44,7 +44,7 @@ import { pipeSvg } from './pipes/svg.js';
   };
   const end = new Date() - start;
   const newSize = newResponse.body.length;
-  console.log(request.url, `Execution time - ${end}ms  Compression - ${oldSize}/${newSize}`, `${(newSize / oldSize) * 100}%`);
+  console.log(request.url, `Execution time - ${end}ms  Compression - ${prettysize(oldSize)}/${prettysize(newSize)}`, `${Math.floor(100 - (newSize / oldSize) * 100)}%`);
 
   parentPort.postMessage(newResponse);
 })();
