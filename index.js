@@ -11,19 +11,18 @@ import { fileURLToPath } from 'url';
 import blockUrls from './blockUrls.js';
 
 // @ts-ignore
-const __dirname = dirname(fileURLToPath(import.meta.url));// eslint-disable-line no-underscore-dangle,max-len
+const __dirname = dirname(fileURLToPath(import.meta.url)); // eslint-disable-line no-underscore-dangle,max-len
 
 const fsExistsAsync = promisify(fs.exists);
 
 const readFile = promisify(fs.readFile);
 
 const options = {
-  port: 8001,
   rule: {
     summary: 'a rule to hack response',
     async beforeSendRequest(requestDetail) {
       if (
-        blockUrls.filter((url) => requestDetail.requestOptions.hostname.startsWith(url)).length > 0
+        blockUrls.some((url) => requestDetail.requestOptions.hostname.startsWith(url))
       ) {
         return {
           response: {
@@ -40,14 +39,22 @@ const options = {
         return requestDetail;
       }
 
-      const hashFile = crypto.createHash('sha1').update(requestDetail.url).digest('hex');
+      const hashFile = crypto
+        .createHash('sha1')
+        .update(requestDetail.url)
+        .digest('hex');
       const cacheFile = `/home/grisa/.caa/${hashFile}`;
       if (await fsExistsAsync(cacheFile)) {
         const headers = lowercaseKeys(requestDetail.header || {});
 
-        const headersMeta = JSON.parse((await readFile(`${cacheFile}.json`)).toString());
+        const headersMeta = JSON.parse(
+          (await readFile(`${cacheFile}.json`)).toString(),
+        );
 
-        if (headers['if-none-match'] && `"${hashFile}"` === headers['if-none-match']) {
+        if (
+          headers['if-none-match']
+          && `"${hashFile}"` === headers['if-none-match']
+        ) {
           console.log('ETag detect');
           return {
             response: {
@@ -108,11 +115,14 @@ const options = {
     enable: true,
     webPort: 8002,
   },
+  port: 8001,
   throttle: 0,
   forceProxyHttps: true,
-  wsIntercept: false,
+  wsIntercept: true,
   silent: false,
-  silent: true,
+  dangerouslyIgnoreUnauthorized: true,
+
+  // silent: true,
 };
 const proxyServer = new anyproxy.ProxyServer(options);
 

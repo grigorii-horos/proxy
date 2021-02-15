@@ -75,9 +75,9 @@ export async function pipeCompress(response, request) {
           'content-encoding': 'br',
         },
       };
-    } catch (error) {
+    } catch (ex) {
       console.log('*************');
-      console.log(error);
+      console.log(ex);
       console.log('*************');
       return response;
     }

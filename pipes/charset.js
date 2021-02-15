@@ -20,7 +20,7 @@ export async function pipeCharset(response, request) {
     let charsetDetect = charset(response?.header['content-type']);
 
     if (
-     response?.header['content-type']?.startsWith('text/html') && !response?.header['content-type'].includes(';charset=')
+      response?.header['content-type']?.startsWith('text/html') && !response?.header['content-type'].includes(';charset=')
     ) {
       const match = [...response.body.toString().matchAll(/<meta.*content=["'].*charset=([\w-]+)/gim)].map((m) => m[1])[0];
       if (match) {
@@ -29,11 +29,7 @@ export async function pipeCharset(response, request) {
     }
 
     let bodyString;
-    if (charsetDetect && charsetDetect !== 'utf-8') {
-      bodyString = (iconv.decode(response.body, charsetDetect));
-    } else {
-      bodyString = (response.body);
-    }
+    bodyString = charsetDetect && charsetDetect !== 'utf-8' ? (iconv.decode(response.body, charsetDetect)) : (response.body);
 
     return {
       ...response,

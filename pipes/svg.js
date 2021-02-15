@@ -25,7 +25,7 @@ export async function pipeSvg(response, request) {
 
       await writeFile(fileToWrite, newBody);
 
-      await execa('svgcleaner', [fileToWrite, fileConverted])
+      await execa('svgcleaner', [fileToWrite, fileConverted]);
 
       newBody = await readFile(fileConverted);
 
@@ -36,7 +36,7 @@ export async function pipeSvg(response, request) {
         ...response,
         body: newBody,
       };
-    } catch (error) {
+    } catch {
       return response;
     }
   }

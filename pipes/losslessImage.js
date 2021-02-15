@@ -8,10 +8,10 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const unlinkFile = promisify(fs.unlink);
 
-const imageMimeTypes = [
+const imageMimeTypes = new Set([
   'image/png',
   'image/gif',
-];
+]);
 
 const imagemagickArguments = [
   '-filter', 'Triangle',
@@ -19,6 +19,7 @@ const imagemagickArguments = [
   '-unsharp', '0.25x0.25+8+0.065',
   '-interlace', 'none',
   '-colorspace', 'sRGB',
+  '+dither', '-colors', '256',
   '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=40,auto-filter=true,lossless=false,method=5,thread-level=4',
   '-strip',
   '-auto-orient',
@@ -33,14 +34,14 @@ export async function pipeLosslessImage(response, request) {
   let newBody = await response.body;
 
   if (
-    imageMimeTypes.includes(response?.header['content-type'])
+    imageMimeTypes.has(response?.header['content-type'])
     && newBody.length > 128
   ) {
     try {
       const oldSize = newBody.length;
 
       const fileToWrite = tempy.file({ extension: 'img' });
-      const fileConverted = tempy.file({ extension: 'webm' });
+      const fileConverted = tempy.file({ extension: 'webp' });
 
       await writeFile(fileToWrite, newBody);
 
@@ -68,7 +69,7 @@ export async function pipeLosslessImage(response, request) {
           'content-type': 'image/webp',
         },
       };
-    } catch (error) {
+    } catch {
       return response;
     }
   }

@@ -42,7 +42,7 @@ import { pipeSvg } from './pipes/svg.js';
     ...newResponse,
     body: await newResponse.body,
   };
-  const end = new Date() - start;
+  const end = Date.now() - start;
   const newSize = newResponse.body.length;
   console.log(request.url, `Execution time - ${end}ms  Compression - ${prettysize(newSize)}/${prettysize(oldSize)}`, `${Math.floor(newSize / (oldSize / 100))}%`);
 
