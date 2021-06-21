@@ -14,13 +14,8 @@ const imageMimeTypes = new Set([
 ]);
 
 const imagemagickArguments = [
-  '-filter', 'Triangle',
-  '-define', 'filter:support=2',
-  '-unsharp', '0.25x0.25+8+0.065',
-  '-interlace', 'none',
   '-colorspace', 'sRGB',
-  '-dither', 'FloydSteinberg',
-  '-colors', '256',
+  '-colors', '512',
   '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=40,auto-filter=true,lossless=false,method=5,thread-level=4',
   '-strip',
   '-auto-orient',
@@ -46,13 +41,7 @@ export async function pipeLosslessImage(response, request) {
 
       await writeFile(fileToWrite, newBody);
 
-      if (newBody.length > 1024 * 1024) {
-        await execa('convert', [fileToWrite, '-resize', '50%', ...imagemagickArguments, fileConverted]);
-      } else if (newBody.length > 256 * 1024) {
-        await execa('convert', [fileToWrite, '-resize', '75%', ...imagemagickArguments, fileConverted]);
-      } else {
-        await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
-      }
+      await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
 
       newBody = await readFile(fileConverted);
       unlinkFile(fileToWrite);

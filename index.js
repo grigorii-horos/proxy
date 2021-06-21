@@ -1,6 +1,7 @@
 import anyproxy from 'anyproxy';
 import crypto from 'crypto';
 import fs from 'fs';
+import mkdirp from 'mkdirp'
 
 import { promisify } from 'util';
 
@@ -43,7 +44,7 @@ const options = {
         .createHash('sha1')
         .update(requestDetail.url)
         .digest('hex');
-      const cacheFile = `/home/grisa/.caa/${hashFile}`;
+      const cacheFile = `/tmp/.cache/${hashFile}`;
       if (await fsExistsAsync(cacheFile)) {
         const headers = lowercaseKeys(requestDetail.header || {});
 
@@ -119,7 +120,7 @@ const options = {
   throttle: 0,
   forceProxyHttps: true,
   wsIntercept: true,
-  silent: false,
+  silent: true,
   dangerouslyIgnoreUnauthorized: true,
 
   // silent: true,
@@ -134,3 +135,12 @@ proxyServer.on('error', (e) => {
   /* */
 });
 proxyServer.start();
+
+
+const fn =async ()=>{
+
+mkdirp('/tmp/.cache')
+
+}
+
+fn()

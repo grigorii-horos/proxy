@@ -32,16 +32,16 @@ export async function pipeSaveToCache(response, request) {
     delete headers.etag;
     delete headers['set-cookie'];
 
-    const ff = {
-      'content-type': response.header['content-type'],
-      'content-encoding': response.header['content-encoding'],
-      'access-control-allow-origin': response.header['access-control-allow-origin'],
-      'cache-control': response.header['cache-control'],
-      etag: response.header.etag,
-      'access-control-allow-methods': response.header['access-control-allow-methods'],
-    };
+    // const ff = {
+    //   'content-type': response.header['content-type'],
+    //   'content-encoding': response.header['content-encoding'],
+    //   'access-control-allow-origin': response.header['access-control-allow-origin'],
+    //   'cache-control': response.header['cache-control'],
+    //   etag: response.header.etag,
+    //   'access-control-allow-methods': response.header['access-control-allow-methods'],
+    // };
 
-    const cacheFile = `/home/grisa/.caa/${hashFile}`;
+    const cacheFile = `/tmp/.cache/${hashFile}`;
 
     const writeFS = async (file) => {
       const writeBody = writeFile(`${file}.tmp`, newBody);

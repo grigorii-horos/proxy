@@ -44,7 +44,7 @@ import { pipeSvg } from './pipes/svg.js';
   };
   const end = Date.now() - start;
   const newSize = newResponse.body.length;
-  console.log(request.url, `Execution time - ${end}ms  Compression - ${prettysize(newSize)}/${prettysize(oldSize)}`, `${Math.floor(newSize / (oldSize / 100))}%`);
+  console.log(request.url, `Execution time - ${end}ms  Compression - ${prettysize(oldSize, true, true, 0)}/${prettysize(newSize, true, true, 0)}`, `${Math.floor(newSize / (oldSize / 100))}%`);
 
   parentPort.postMessage(newResponse);
 })();
