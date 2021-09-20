@@ -1,5 +1,5 @@
 import prettysize from 'prettysize';
-import { parentPort, workerData } from 'worker_threads';
+import { parentPort, workerData } from 'node:worker_threads';
 import { pipeCache } from './pipes/cache.js';
 import { pipeCharset } from './pipes/charset.js';
 import { pipeCompress } from './pipes/compress.js';

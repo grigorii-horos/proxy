@@ -16,7 +16,7 @@ const alwaysCache = [
 export async function pipeCache(response) {
   if (
     response?.header['content-type']
-    && alwaysCache.filter((mime) => response?.header['content-type'].startsWith(mime)).length > 0
+    && alwaysCache.some((mime) => response?.header['content-type'].startsWith(mime))
   ) {
     return {
       ...response,

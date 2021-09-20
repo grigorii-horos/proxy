@@ -1,5 +1,5 @@
-import { promisify } from 'util';
-import zlib from 'zlib';
+import { promisify } from 'node:util';
+import zlib from 'node:zlib';
 
 const brotliCompress = promisify(zlib.brotliCompress);
 const gzCompress = promisify(zlib.gzip);
@@ -27,7 +27,7 @@ export async function pipeCompress(response, request) {
       ...compressMimeTypes.text,
       ...compressMimeTypes.generic,
       ...compressMimeTypes.font,
-    ].filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
+    ].some((mime) => response?.header['content-type']?.startsWith(mime))
   ) {
     const newData = await response.body;
     try {
@@ -48,12 +48,12 @@ export async function pipeCompress(response, request) {
       let mode = zlib.constants.BROTLI_MODE_GENERIC;
       if (
         compressMimeTypes.text
-          .filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
+          .some((mime) => response?.header['content-type']?.startsWith(mime))
       ) {
         mode = zlib.constants.BROTLI_MODE_TEXT;
       } else if (
         compressMimeTypes.font
-          .filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
+          .some((mime) => response?.header['content-type']?.startsWith(mime))
       ) {
         mode = zlib.constants.BROTLI_MODE_FONT;
       }
@@ -62,7 +62,7 @@ export async function pipeCompress(response, request) {
         ...response,
         // @ts-ignore
         body: brotliCompress(newData, {
-          chunkSize: 32 * 1024,
+          chunkSize: 32 * 1_024,
           params: {
             [zlib.constants.BROTLI_PARAM_MODE]: mode,
             [zlib.constants.BROTLI_PARAM_QUALITY]: 6,

@@ -1,6 +1,6 @@
-import fs from 'fs';
-import { promisify } from 'util';
-import crypto from 'crypto';
+import fs from 'node:fs';
+import { promisify } from 'node:util';
+import crypto from 'node:crypto';
 
 const writeFile = promisify(fs.writeFile);
 const fsRename = promisify(fs.rename);
@@ -22,7 +22,7 @@ export async function pipeSaveToCache(response, request) {
   const newBody = await response.body;
   if (
     response?.statusCode === 200
-    && cacheMimeTypes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
+    && cacheMimeTypes.some((mime) => response?.header['content-type']?.startsWith(mime))
     && request.requestOptions.method === 'GET'
     && newBody.length > 16
   ) {

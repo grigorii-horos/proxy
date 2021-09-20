@@ -1,6 +1,5 @@
 import charset from 'charset';
 import iconv from 'iconv-lite';
-import jschardet from 'jschardet';
 
 const convertCharsetMimes = [
   'text/',
@@ -15,7 +14,7 @@ const convertCharsetMimes = [
  */
 export async function pipeCharset(response, request) {
   if (
-    convertCharsetMimes.filter((mime) => response?.header['content-type']?.startsWith(mime)).length > 0
+    convertCharsetMimes.some((mime) => response?.header['content-type']?.startsWith(mime))
   ) {
     let charsetDetect = charset(response?.header['content-type']);
 
@@ -28,8 +27,7 @@ export async function pipeCharset(response, request) {
       }
     }
 
-    let bodyString;
-    bodyString = charsetDetect && charsetDetect !== 'utf-8' ? (iconv.decode(response.body, charsetDetect)) : (response.body);
+    const bodyString = charsetDetect && charsetDetect !== 'utf-8' ? (iconv.decode(response.body, charsetDetect)) : (response.body);
 
     return {
       ...response,

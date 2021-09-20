@@ -1,14 +1,14 @@
 import anyproxy from 'anyproxy';
-import crypto from 'crypto';
-import fs from 'fs';
-import mkdirp from 'mkdirp'
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import mkdirp from 'mkdirp';
 
-import { promisify } from 'util';
+import { promisify } from 'node:util';
 
 import lowercaseKeys from 'lowercase-keys';
-import { Worker } from 'worker_threads';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { Worker } from 'node:worker_threads';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import blockUrls from './blockUrls.js';
 
 // @ts-ignore
@@ -114,9 +114,9 @@ const options = {
   },
   webInterface: {
     enable: true,
-    webPort: 8002,
+    webPort: 8_002,
   },
-  port: 8001,
+  port: 8_001,
   throttle: 0,
   forceProxyHttps: true,
   wsIntercept: true,
@@ -136,11 +136,10 @@ proxyServer.on('error', (e) => {
 });
 proxyServer.start();
 
-
-const fn =async ()=>{
+const function_ =async ()=>{
 
 mkdirp('/tmp/.cache')
 
 }
 
-fn()
+function_();

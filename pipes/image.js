@@ -1,6 +1,6 @@
 import execa from 'execa';
-import { promisify } from 'util';
-import fs from 'fs';
+import { promisify } from 'node:util';
+import fs from 'node:fs';
 
 import tempy from 'tempy';
 
@@ -14,8 +14,6 @@ const imageMimeTypes = new Set([
 ]);
 
 const imagemagickArguments = [
-  '-define', 'filter:support=2',
-  '-colorspace', 'sRGB',
   '-colors', '512',
   '-strip',
   '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=4',

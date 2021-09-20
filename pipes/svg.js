@@ -1,6 +1,6 @@
 import execa from 'execa';
-import fs from 'fs';
-import { promisify } from 'util';
+import fs from 'node:fs';
+import { promisify } from 'node:util';
 
 import tempy from 'tempy';
 
