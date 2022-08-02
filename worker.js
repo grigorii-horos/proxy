@@ -3,12 +3,12 @@ import { parentPort, workerData } from 'node:worker_threads';
 import { pipeCache } from './pipes/cache.js';
 import { pipeCharset } from './pipes/charset.js';
 import { pipeCompress } from './pipes/compress.js';
-import { pipeHeadersClean } from './pipes/headersClean.js';
+import { pipeHeadersClean } from './pipes/headers-clean.js';
 import { pipeHtml } from './pipes/html.js';
 import { pipeImage } from './pipes/image.js';
-import { pipeLosslessImage } from './pipes/losslessImage.js';
-import { pipeLovercaseHeader } from './pipes/lovercaseHeaders.js';
-import { pipeSaveToCache } from './pipes/saveToCache.js';
+import { pipeLosslessImage } from './pipes/lossless-image.js';
+import { pipeLovercaseHeader } from './pipes/lovercase-headers.js';
+import { pipeSaveToCache } from './pipes/save-to-cache.js';
 import { pipeSvg } from './pipes/svg.js';
 
 (async () => {
@@ -44,7 +44,16 @@ import { pipeSvg } from './pipes/svg.js';
   };
   const end = Date.now() - start;
   const newSize = newResponse.body.length;
-  console.log(request.url, `Execution time - ${end}ms  Compression - ${prettysize(oldSize, true, true, 0)}/${prettysize(newSize, true, true, 0)}`, `${Math.floor(newSize / (oldSize / 100))}%`);
+  console.log(
+    request.url,
+    `Execution time - ${end}ms  Compression - ${prettysize(
+      oldSize,
+      true,
+      true,
+      0,
+    )}/${prettysize(newSize, true, true, 0)}`,
+    `${Math.floor(newSize / (oldSize / 100))}%`,
+  );
 
   parentPort.postMessage(newResponse);
 })();

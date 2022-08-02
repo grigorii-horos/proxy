@@ -10,31 +10,23 @@ module.exports = {
   extends: [
     // Syntax and ~
     'eslint:recommended',
-    'es/browser',
     'plugin:node/recommended',
-    // 'plugin:react/recommended',
 
     'plugin:ava/recommended',
     'plugin:promise/recommended',
     'standard-jsdoc',
     'plugin:json/recommended',
 
-    // Funny
-    // 'plugin:you-dont-need-lodash-underscore/compatible',
     'plugin:unicorn/recommended',
     'plugin:security/recommended',
-    // 'plugin:jquery/slim',
 
     // Global config
     'airbnb-base',
-    // 'airbnb',
   ],
   plugins: [
     'json',
-    // 'html',
     'no-loops',
     'unicorn',
-    // 'dollar-sign',
     'async-await',
     'prefer-object-spread',
     'promise',

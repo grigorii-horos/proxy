@@ -1,15 +1,15 @@
-import anyproxy from 'anyproxy';
-import crypto from 'node:crypto';
-import fs from 'node:fs';
-import mkdirp from 'mkdirp';
+import anyproxy from "anyproxy";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import mkdirp from "mkdirp";
 
-import { promisify } from 'node:util';
+import { promisify } from "node:util";
 
-import lowercaseKeys from 'lowercase-keys';
-import { Worker } from 'node:worker_threads';
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import blockUrls from './blockUrls.js';
+import lowercaseKeys from "lowercase-keys";
+import { Worker } from "node:worker_threads";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import blockUrls from "./blockUrls.js";
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url)); // eslint-disable-line no-underscore-dangle,max-len
@@ -20,47 +20,49 @@ const readFile = promisify(fs.readFile);
 
 const options = {
   rule: {
-    summary: 'a rule to hack response',
+    summary: "a rule to hack response",
     async beforeSendRequest(requestDetail) {
       if (
-        blockUrls.some((url) => requestDetail.requestOptions.hostname.startsWith(url))
+        blockUrls.some((url) =>
+          requestDetail.requestOptions.hostname.startsWith(url)
+        )
       ) {
         return {
           response: {
             statusCode: 404,
             header: {
-              'content-type': 'text/plain',
+              "content-type": "text/plain",
             },
-            body: 'Not Found',
+            body: "Not Found",
           },
         };
       }
 
-      if (requestDetail.requestOptions.method !== 'GET') {
+      if (requestDetail.requestOptions.method !== "GET") {
         return requestDetail;
       }
 
       const hashFile = crypto
-        .createHash('sha1')
+        .createHash("sha1")
         .update(requestDetail.url)
-        .digest('hex');
+        .digest("hex");
       const cacheFile = `/tmp/.cache/${hashFile}`;
       if (await fsExistsAsync(cacheFile)) {
         const headers = lowercaseKeys(requestDetail.header || {});
 
         const headersMeta = JSON.parse(
-          (await readFile(`${cacheFile}.json`)).toString(),
+          (await readFile(`${cacheFile}.json`)).toString()
         );
 
         if (
-          headers['if-none-match']
-          && `"${hashFile}"` === headers['if-none-match']
+          headers["if-none-match"] &&
+          `"${hashFile}"` === headers["if-none-match"]
         ) {
-          console.log('ETag detect');
+          console.log("ETag detect");
           return {
             response: {
               statusCode: 304,
-              body: '',
+              body: "",
             },
           };
         }
@@ -96,7 +98,7 @@ const options = {
           },
         });
 
-        w.on('message', (response) => {
+        w.on("message", (response) => {
           let newResponse = response;
           newResponse = {
             ...newResponse,
@@ -127,19 +129,17 @@ const options = {
 };
 const proxyServer = new anyproxy.ProxyServer(options);
 
-proxyServer.on('ready', () => {
+proxyServer.on("ready", () => {
   /* */
 });
-proxyServer.on('error', (e) => {
+proxyServer.on("error", (e) => {
   console.log(e);
   /* */
 });
 proxyServer.start();
 
-const function_ =async ()=>{
-
-mkdirp('/tmp/.cache')
-
-}
+const function_ = async () => {
+  mkdirp("/tmp/.cache");
+};
 
 function_();
