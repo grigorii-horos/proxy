@@ -1,8 +1,8 @@
-import execa from 'execa';
+import { execa } from 'execa';
 import { promisify } from 'node:util';
 import fs from 'node:fs';
 
-import tempy from 'tempy';
+import { temporaryFile } from 'tempy';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -11,14 +11,17 @@ const unlinkFile = promisify(fs.unlink);
 const imageMimeTypes = new Set([
   'image/jpeg',
   'image/webp',
+  'image/x-icon',
 ]);
 
 const imagemagickArguments = [
-  '-colors', '512',
   '-strip',
-  '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=4',
+  '+dither',
   '-auto-orient',
-  '-quality', '45',
+  '-interlace', 'Plane',
+  '-gaussian-blur', '0.01',
+  '-quality', '20',
+  '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
 ];
 
 /**
@@ -35,8 +38,8 @@ export async function pipeImage(response, request) {
     try {
       const oldSize = newBody.length;
 
-      const fileToWrite = tempy.file({ extension: 'img' });
-      const fileConverted = tempy.file({ extension: 'webp' });
+      const fileToWrite = temporaryFile({ extension: 'img' });
+      const fileConverted = temporaryFile({ extension: 'webp' });
 
       await writeFile(fileToWrite, newBody);
 

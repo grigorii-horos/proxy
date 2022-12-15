@@ -1,8 +1,8 @@
-import execa from 'execa';
+import { execa } from 'execa';
 import { promisify } from 'node:util';
 import fs from 'node:fs';
 
-import tempy from 'tempy';
+import { temporaryFile } from 'tempy';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -14,11 +14,13 @@ const imageMimeTypes = new Set([
 ]);
 
 const imagemagickArguments = [
-  '-colors', '512',
-  '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=40,auto-filter=true,lossless=false,method=5,thread-level=4',
+  '-define', 'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=20,auto-filter=true,lossless=false,method=5,thread-level=1',
   '-strip',
+  '+dither',
   '-auto-orient',
-  '-quality', '50',
+  '-interlace', 'Plane',
+  '-gaussian-blur', '0.01',
+  '-quality', '25',
 ];
 
 /**
@@ -35,8 +37,8 @@ export async function pipeLosslessImage(response, request) {
     try {
       const oldSize = newBody.length;
 
-      const fileToWrite = tempy.file({ extension: 'img' });
-      const fileConverted = tempy.file({ extension: 'webp' });
+      const fileToWrite = temporaryFile({ extension: 'img' });
+      const fileConverted = temporaryFile({ extension: 'webp' });
 
       await writeFile(fileToWrite, newBody);
 

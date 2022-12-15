@@ -1,16 +1,27 @@
-import execa from 'execa';
+import { execa } from 'execa';
 import fs from 'node:fs';
 import { promisify } from 'node:util';
 
-import tempy from 'tempy';
+import { temporaryFile } from 'tempy';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 const unlinkFile = promisify(fs.unlink);
 
+const svgCleanerArguments = [
+  '--remove-gradient-attributes=true',
+  '--apply-transform-to-paths=true',
+  '--coordinates-precision=5',
+  '--properties-precision=5',
+  '--transforms-precision=7',
+  '--paths-coordinates-precision=7',
+  '--multipass',
+  '--quiet',
+];
+
 /**
- * @param response
- * @param request
+ * @param {{ body: any; header: { [x: string]: string; }; }} response
+ * @param {any} request
  */
 export async function pipeSvg(response, request) {
   let newBody = await response.body;
@@ -20,12 +31,12 @@ export async function pipeSvg(response, request) {
      && newBody.length > 128
   ) {
     try {
-      const fileToWrite = tempy.file({ extension: 'svg' });
-      const fileConverted = tempy.file({ extension: 'svg' });
+      const fileToWrite = temporaryFile({ extension: 'svg' });
+      const fileConverted = temporaryFile({ extension: 'svg' });
 
       await writeFile(fileToWrite, newBody);
 
-      await execa('svgcleaner', [fileToWrite, fileConverted]);
+      await execa('svgcleaner', [fileToWrite, ...svgCleanerArguments, fileConverted]);
 
       newBody = await readFile(fileConverted);
 
