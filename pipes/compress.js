@@ -36,7 +36,7 @@ export async function pipeCompress(response, request) {
           ...response,
           // @ts-ignore
           body: gzCompress(newData, {
-            level: 6,
+            level: 5,
           }),
           header: {
             ...response.header,
@@ -65,7 +65,7 @@ export async function pipeCompress(response, request) {
           chunkSize: 32 * 1_024,
           params: {
             [zlib.constants.BROTLI_PARAM_MODE]: mode,
-            [zlib.constants.BROTLI_PARAM_QUALITY]: 6,
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 5,
             // @ts-ignore
             [zlib.constants.BROTLI_PARAM_SIZE_HINT]: newData.length,
           },

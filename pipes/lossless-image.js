@@ -19,7 +19,7 @@ const imagemagickArguments = [
   '-auto-orient',
   '-interlace', 'Plane',
   '-gaussian-blur', '0.01',
-  '-quality', '25',
+  '-quality', '30',
 ];
 
 /**

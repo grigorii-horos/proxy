@@ -21,7 +21,7 @@ const imagemagickArguments = [
   '-auto-orient',
   '-interlace', 'Plane',
   '-gaussian-blur', '0.01',
-  '-quality', '20',
+  '-quality', '25',
   '-define', 'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
 ];
 
