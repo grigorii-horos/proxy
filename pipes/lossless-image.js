@@ -10,7 +10,6 @@ const unlinkFile = promisify(fs.unlink);
 
 const imageMimeTypes = new Set([
   'image/png',
-  'image/gif',
 ]);
 
 const imagemagickArguments = [

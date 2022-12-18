@@ -12,6 +12,7 @@ const imageMimeTypes = new Set([
   'image/jpeg',
   'image/webp',
   'image/x-icon',
+  'image/gif',
 ]);
 
 const imagemagickArguments = [
@@ -43,7 +44,7 @@ export async function pipeImage(response, request) {
 
       await writeFile(fileToWrite, newBody);
 
-      await execa('convert', [fileToWrite, ...imagemagickArguments, fileConverted]);
+      await execa('convert', [`${fileToWrite}[0]`, ...imagemagickArguments, fileConverted]);
 
       newBody = await readFile(fileConverted);
       unlinkFile(fileToWrite);
@@ -61,7 +62,8 @@ export async function pipeImage(response, request) {
           'content-type': 'image/webp',
         },
       };
-    } catch {
+    } catch (error) {
+      console.log(error);
       return response;
     }
   }
