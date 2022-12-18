@@ -39,28 +39,29 @@ export async function pipeHtml(response, request) {
 
       images.map(async (image) => {
         const url = new URL(image, base);
+        try {
+          const responseImage = await axios(url.href, {
+            headers: request.header,
+            responseType: "arraybuffer",
+          });
 
-        const responseImage = await axios(url.href, {
-          headers: request.header,
-          responseType: "arraybuffer",
-        });
+          if (responseImage.status === 200) {
+            try {
+              startWorker(
+                { ...request, url: url.href },
+                {
+                  ...response,
 
-        if (responseImage.status === 200) {
-          try {
-            startWorker(
-              { ...request, url: url.href },
-              {
-                ...response,
-
-                statusCode: responseImage.status,
-                header: responseImage.headers,
-                body: responseImage.data,
-              }
-            );
-          } catch (error) {
-            console.log(error);
+                  statusCode: responseImage.status,
+                  header: responseImage.headers,
+                  body: responseImage.data,
+                }
+              );
+            } catch (error) {
+              console.log(error);
+            }
           }
-        }
+        } catch {}
       });
     }
 
