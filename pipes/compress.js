@@ -10,7 +10,7 @@ const compressMimeTypes = {
     'text/',
   ],
   generic: [
-    'image/',
+    // 'image/',
   ],
   font: [
     'font/',
@@ -82,6 +82,7 @@ export async function pipeCompress(response, request) {
       return response;
     }
   }
+  delete response.header['content-encoding'];
 
   return response;
 }

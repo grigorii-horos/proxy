@@ -4,10 +4,10 @@ const keepHeaders = ([
   'authorization',
   'cache-control',
   'content-', // *
-  'date',
+  // 'date',
   'etag',
   'expires',
-  'last-modified',
+  // 'last-modified',
   'link',
   'location',
   'pragma',
