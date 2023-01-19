@@ -1,21 +1,21 @@
 const keepHeaders = [
-  "access-control-allow-", // *
-  "age",
-  "authorization",
-  "cache-control",
-  "content-", // *
+  'access-control-allow-', // *
+  'age',
+  'authorization',
+  'cache-control',
+  'content-', // *
   // 'date',
-  "etag",
-  "expires",
+  'etag',
+  'expires',
   // 'last-modified',
-  "link",
-  "location",
-  "pragma",
-  "referrer-policy",
-  "set-cookie",
-  "strict-transport-security",
-  "transfer-encoding",
-  "www-authenticate",
+  'link',
+  'location',
+  'pragma',
+  'referrer-policy',
+  'set-cookie',
+  'strict-transport-security',
+  'transfer-encoding',
+  'www-authenticate',
   // 'accept-patch',
   // 'accept-ranges',
   // 'allow',
@@ -39,14 +39,12 @@ const keepHeaders = [
  */
 export async function pipeHeadersClean(response) {
   const headers = Object.fromEntries(
-    Object.entries(response.header).filter(([key]) =>
-      keepHeaders.some((keepHeader) => {
-        if (key.startsWith(keepHeader)) {
-          return true;
-        }
-        return false;
-      })
-    )
+    Object.entries(response.header).filter(([key]) => keepHeaders.some((keepHeader) => {
+      if (key.startsWith(keepHeader)) {
+        return true;
+      }
+      return false;
+    })),
   );
 
   return { ...response, header: headers };

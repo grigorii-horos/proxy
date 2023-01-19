@@ -1,15 +1,15 @@
-import prettysize from "prettysize";
-import { parentPort, workerData } from "node:worker_threads";
-import { pipeCache } from "./pipes/cache.js";
-import { pipeCharset } from "./pipes/charset.js";
-import { pipeCompress } from "./pipes/compress.js";
-import { pipeHeadersClean } from "./pipes/headers-clean.js";
-import { pipeHtml } from "./pipes/html.js";
-import { pipeImage } from "./pipes/image.js";
-import { pipeLosslessImage } from "./pipes/lossless-image.js";
-import { pipeLovercaseHeader } from "./pipes/lovercase-headers.js";
-import { pipeSaveToCache } from "./pipes/save-to-cache.js";
-import { pipeSvg } from "./pipes/svg.js";
+import prettysize from 'prettysize';
+import { parentPort, workerData } from 'node:worker_threads';
+import { pipeCache } from './pipes/cache.js';
+import { pipeCharset } from './pipes/charset.js';
+import { pipeCompress } from './pipes/compress.js';
+import { pipeHeadersClean } from './pipes/headers-clean.js';
+import { pipeHtml } from './pipes/html.js';
+import { pipeImage } from './pipes/image.js';
+import { pipeLosslessImage } from './pipes/lossless-image.js';
+import { pipeLowercaseHeader } from './pipes/lowercase-headers.js';
+import { pipeSaveToCache } from './pipes/save-to-cache.js';
+import { pipeSvg } from './pipes/svg.js';
 
 (async () => {
   const { request, response } = workerData;
@@ -23,7 +23,7 @@ import { pipeSvg } from "./pipes/svg.js";
     body: Buffer.from(newResponse.body),
   };
 
-  newResponse = await pipeLovercaseHeader(newResponse, request);
+  newResponse = await pipeLowercaseHeader(newResponse, request);
   newResponse = await pipeHeadersClean(newResponse, request);
 
   newResponse = await pipeCharset(newResponse, request);
@@ -50,9 +50,9 @@ import { pipeSvg } from "./pipes/svg.js";
       oldSize,
       true,
       true,
-      0
+      0,
     )}/${prettysize(newSize, true, true, 0)}`,
-    `${Math.floor(newSize / (oldSize / 100))}%`
+    `${Math.floor(newSize / (oldSize / 100))}%`,
   );
 
   parentPort.postMessage(newResponse);

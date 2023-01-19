@@ -1,24 +1,24 @@
-import axios from "axios";
-import replaceAll from "string.prototype.replaceall";
-import startWorker from "../start-worker.js";
+import axios from 'axios';
+import replaceAll from 'string.prototype.replaceall';
+import startWorker from '../start-worker.js';
 
 /**
  * @param response
  * @param request
  */
 export async function pipeHtml(response, request) {
-  if (response?.header["content-type"]?.startsWith("text/html")) {
+  if (response?.header['content-type']?.startsWith('text/html')) {
     let bodyString = (await response.body).toString();
 
     bodyString = replaceAll(
       bodyString,
       /<(img|iframe)/gm,
-      '<$1 loading="lazy"'
+      '<$1 loading="lazy"',
     );
     bodyString = replaceAll(
       bodyString,
       /(<(?:script|link).*)integrity=(:?'|")sha512-.*?(:?'|")/gm,
-      "$1"
+      '$1',
     );
 
     const regexp = /<img\s+[^>]*?src=("|')([^"']+)\1/g;
@@ -29,13 +29,12 @@ export async function pipeHtml(response, request) {
       const images = array
         .map((img) => img[2].toLowerCase())
         .filter(
-          (imgSource) =>
-            imgSource.endsWith(".png") ||
-            imgSource.endsWith(".jpg") ||
-            imgSource.endsWith(".jpeg") ||
-            imgSource.endsWith(".webp") ||
-            imgSource.endsWith(".gif") ||
-            imgSource.endsWith(".svg")
+          (imgSource) => imgSource.endsWith('.png')
+            || imgSource.endsWith('.jpg')
+            || imgSource.endsWith('.jpeg')
+            || imgSource.endsWith('.webp')
+            || imgSource.endsWith('.gif')
+            || imgSource.endsWith('.svg'),
         );
 
       images.map(async (image) => {
@@ -43,7 +42,7 @@ export async function pipeHtml(response, request) {
         try {
           const responseImage = await axios(url.href, {
             headers: request.header,
-            responseType: "arraybuffer",
+            responseType: 'arraybuffer',
           });
 
           if (responseImage.status === 200) {
@@ -56,7 +55,7 @@ export async function pipeHtml(response, request) {
                   statusCode: responseImage.status,
                   header: responseImage.headers,
                   body: responseImage.data,
-                }
+                },
               );
             } catch (error) {
               console.log(error);

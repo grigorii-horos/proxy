@@ -1,9 +1,9 @@
-import lowercaseKeys from "lowercase-keys";
+import lowercaseKeys from 'lowercase-keys';
 
 /**
  * @param response
  */
-export async function pipeLovercaseHeader(response) {
+export async function pipeLowercaseHeader(response) {
   const headers = lowercaseKeys(response.header || {});
 
   return {
