@@ -34,7 +34,8 @@ export async function pipeHtml(response, request) {
             imgSource.endsWith(".jpg") ||
             imgSource.endsWith(".jpeg") ||
             imgSource.endsWith(".webp") ||
-            imgSource.endsWith(".gif")
+            imgSource.endsWith(".gif") ||
+            imgSource.endsWith(".svg")
         );
 
       images.map(async (image) => {

@@ -1,20 +1,15 @@
-import { promisify } from 'node:util';
-import zlib from 'node:zlib';
+import { promisify } from "node:util";
+import zlib from "node:zlib";
 
 const brotliCompress = promisify(zlib.brotliCompress);
 const gzCompress = promisify(zlib.gzip);
 
 const compressMimeTypes = {
-  text: [
-    'application/',
-    'text/',
-  ],
+  text: ["application/", "text/"],
   generic: [
     // 'image/',
   ],
-  font: [
-    'font/',
-  ],
+  font: ["font/"],
 };
 
 /**
@@ -27,11 +22,11 @@ export async function pipeCompress(response, request) {
       ...compressMimeTypes.text,
       ...compressMimeTypes.generic,
       ...compressMimeTypes.font,
-    ].some((mime) => response?.header['content-type']?.startsWith(mime))
+    ].some((mime) => response?.header["content-type"]?.startsWith(mime))
   ) {
     const newData = await response.body;
     try {
-      if (request.protocol === 'http') {
+      if (request.protocol === "http") {
         return {
           ...response,
           // @ts-ignore
@@ -40,20 +35,22 @@ export async function pipeCompress(response, request) {
           }),
           header: {
             ...response.header,
-            'content-encoding': 'gzip',
+            "content-encoding": "gzip",
           },
         };
       }
 
       let mode = zlib.constants.BROTLI_MODE_GENERIC;
       if (
-        compressMimeTypes.text
-          .some((mime) => response?.header['content-type']?.startsWith(mime))
+        compressMimeTypes.text.some((mime) =>
+          response?.header["content-type"]?.startsWith(mime)
+        )
       ) {
         mode = zlib.constants.BROTLI_MODE_TEXT;
       } else if (
-        compressMimeTypes.font
-          .some((mime) => response?.header['content-type']?.startsWith(mime))
+        compressMimeTypes.font.some((mime) =>
+          response?.header["content-type"]?.startsWith(mime)
+        )
       ) {
         mode = zlib.constants.BROTLI_MODE_FONT;
       }
@@ -72,17 +69,17 @@ export async function pipeCompress(response, request) {
         }),
         header: {
           ...response.header,
-          'content-encoding': 'br',
+          "content-encoding": "br",
         },
       };
     } catch (ex) {
-      console.log('*************');
+      console.log("*************");
       console.log(ex);
-      console.log('*************');
+      console.log("*************");
       return response;
     }
   }
-  delete response.header['content-encoding'];
+  // delete response.header['content-encoding'];
 
   return response;
 }

@@ -68,6 +68,8 @@ const options = {
           };
         }
 
+        console.log("Return from cache " + requestDetail.url);
+
         return {
           response: {
             statusCode: 200,

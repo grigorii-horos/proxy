@@ -1,4 +1,4 @@
-import lowercaseKeys from 'lowercase-keys';
+import lowercaseKeys from "lowercase-keys";
 
 /**
  * @param response

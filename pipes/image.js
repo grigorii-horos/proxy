@@ -16,6 +16,8 @@ const imageMimeTypes = new Set([
 ]);
 
 const imagemagickArguments = (quality) => [
+  "-colorspace",
+  " sRGB",
   "-strip",
   "+dither",
   "-auto-orient",
@@ -24,7 +26,10 @@ const imagemagickArguments = (quality) => [
   "-gaussian-blur",
   "0.01",
   "-quality",
-  "1",
+  "15",
+  "-interlace",
+  "plane",
+
   "-define",
   "webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1",
 ];
