@@ -25,7 +25,7 @@ const imagemagickArguments = (quality = '20', config = {}) => {
     '+dither',
     '-auto-orient',
     '-quality',
-    config.eink ? '35' : `${quality}`,
+    `${quality}`,
 
     '-unsharp', '0x3+1+0',
 
@@ -46,16 +46,16 @@ export async function pipeImage(response, request, config) {
     imageMimeTypes.has(response?.header['content-type'])
     && newBody.length > 128
   ) {
-    let quality = '20';
+    let quality = config.eink ? '30' : '20';
     try {
       const oldSize = newBody.length;
 
       if (newBody.length > 1000 * 100) {
-        quality = '15';
+        quality = config.eink ? '25' : '15';
       } else if (newBody.length > 1000 * 1000) {
-        quality = '10';
+        quality = config.eink ? '20' : '10';
       } else if (newBody.length > 1000 * 1000 * 10) {
-        quality = '5';
+        quality = config.eink ? '15' : '5';
       }
 
       const fileToWrite = temporaryFile({ extension: 'img' });

@@ -20,7 +20,7 @@ const imagemagickArguments = (quality = '30', config = {}) => {
     '+dither',
     '-auto-orient',
     '-quality',
-    config.eink ? '40' : `${quality}`,
+    `${quality}`,
 
     '-unsharp', '0x3+1+0',
     '-define',
@@ -50,7 +50,7 @@ export async function pipeLosslessImage(response, request, config) {
 
       await execa('convert', [
         fileToWrite,
-        ...imagemagickArguments('30', config),
+        ...imagemagickArguments(config.eink ? '35' : '30'),
         fileConverted,
       ]);
 
