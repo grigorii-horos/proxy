@@ -16,7 +16,7 @@ const imageMimeTypes = new Set([
 ]);
 
 const imagemagickArguments = (quality = '20', config = {}) => {
-  const argumentConfig = config.eink ? ['-grayscale', 'Rec709Luma'] : ['-colorspace', 'sRGB'];
+  const argumentConfig = config.eink ? ['-grayscale', 'Rec709Luma', '-brightness-contrast', '20x40'] : ['-colorspace', 'sRGB'];
 
   return [...argumentConfig,
     '-colorspace', 'sRGB',

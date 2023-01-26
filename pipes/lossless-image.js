@@ -11,7 +11,7 @@ const unlinkFile = promisify(fs.unlink);
 const imageMimeTypes = new Set(['image/png']);
 
 const imagemagickArguments = (quality = '30', config = {}) => {
-  const argumentConfig = config.eink ? ['-grayscale', 'Rec709Luma'] : ['-colorspace', 'sRGB'];
+  const argumentConfig = config.eink ? ['-grayscale', 'Rec709Luma', '-brightness-contrast', '20x40'] : ['-colorspace', 'sRGB'];
 
   return [...argumentConfig,
 

@@ -15,8 +15,9 @@ const compressMimeTypes = {
 /**
  * @param response
  * @param request
+ * @param config
  */
-export async function pipeCompress(response, request) {
+export async function pipeCompress(response, request, config) {
   if (
     [
       ...compressMimeTypes.text,
@@ -26,7 +27,7 @@ export async function pipeCompress(response, request) {
   ) {
     const newData = await response.body;
     try {
-      if (request.protocol === 'http') {
+      if (request.protocol === 'http' || config.eink) {
         return {
           ...response,
           // @ts-ignore
