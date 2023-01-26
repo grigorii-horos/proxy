@@ -11,25 +11,27 @@ const unlinkFile = promisify(fs.unlink);
 const imageMimeTypes = new Set([
   'image/jpeg',
   'image/webp',
-  'image/x-icon',
-  'image/gif',
 ]);
 
-const imagemagickArguments = (quality = '20', config = {}) => {
-  const argumentConfig = config.eink
-    ? ['-colorspace', 'gray', '-grayscale', 'Rec709Luma', '-unsharp', '0x4+2+0']
-    : ['-colorspace', 'sRGB', '-gaussian-blur', '0.01'];
-
-  return [...argumentConfig,
+const imagemagickArguments = (quality = '30', config = {}) => {
+  let parameterArguments = [
     '-strip',
     '+dither',
     '-auto-orient',
     '-quality',
     `${quality}`,
-
-    '-define',
-    'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
   ];
+
+  parameterArguments = config.eink
+    ? [...parameterArguments, '-grayscale', 'Rec709Luma', '-colorspace', 'gray', '-unsharp', '0x2+2+0']
+    : [...parameterArguments, '-colorspace', 'sRGB', '-unsharp', '0x2+1+0', '-gaussian-blur', '0.01'];
+
+  parameterArguments = [...parameterArguments,
+    '-define',
+    'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=20,auto-filter=true,lossless=false,method=5,thread-level=1',
+  ];
+
+  return parameterArguments;
 };
 
 /**
@@ -61,7 +63,7 @@ export async function pipeImage(response, request, config) {
 
       await writeFile(fileToWrite, newBody);
 
-      await execa('gm', ['convert',
+      await execa('convert', [
         `${fileToWrite}[0]`,
         ...imagemagickArguments(quality, config),
         fileConverted,
