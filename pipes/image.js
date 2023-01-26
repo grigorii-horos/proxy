@@ -15,30 +15,34 @@ const imageMimeTypes = new Set([
   'image/gif',
 ]);
 
-const imagemagickArguments = (quality) => [
-  '-colorspace',
-  ' sRGB',
-  '-strip',
-  '+dither',
-  '-auto-orient',
-  '-interlace',
-  'Plane',
-  '-gaussian-blur',
-  '0.01',
-  '-quality',
-  '15',
-  '-interlace',
-  'plane',
+const imagemagickArguments = (quality = '20', config = {}) => {
+  const argumentConfig = config.eink ? ['-grayscale', 'Rec709Luma'] : ['-colorspace', 'sRGB'];
 
-  '-define',
-  'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
-];
+  return [...argumentConfig,
+    '-colorspace', 'sRGB',
+    '-strip',
+    '+dither',
+    '-auto-orient',
+    '-interlace',
+    'Plane',
+    '-gaussian-blur',
+    '0.01',
+    '-quality',
+    `${quality}`,
+    '-interlace',
+    'plane',
+
+    '-define',
+    'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
+  ];
+};
 
 /**
  * @param response
  * @param request
+ * @param config
  */
-export async function pipeImage(response, request) {
+export async function pipeImage(response, request, config) {
   let newBody = await response.body;
 
   if (
@@ -64,7 +68,7 @@ export async function pipeImage(response, request) {
 
       await execa('convert', [
         `${fileToWrite}[0]`,
-        ...imagemagickArguments(quality),
+        ...imagemagickArguments(quality, config),
         fileConverted,
       ]);
 

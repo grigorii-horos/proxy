@@ -6,7 +6,7 @@ import startWorker from '../start-worker.js';
  * @param response
  * @param request
  */
-export async function pipeHtml(response, request) {
+export async function pipeHtml(response, request, config) {
   if (response?.header['content-type']?.startsWith('text/html')) {
     let bodyString = (await response.body).toString();
 

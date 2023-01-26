@@ -11,6 +11,11 @@ import { pipeLowercaseHeader } from './pipes/lowercase-headers.js';
 import { pipeSaveToCache } from './pipes/save-to-cache.js';
 import { pipeSvg } from './pipes/svg.js';
 
+import defaultConfig from './config.default.json' assert { type: "json" };
+import userConfig from './config.json' assert { type: "json" };
+
+const config = { ...defaultConfig, ...userConfig };
+
 (async () => {
   const { request, response } = workerData;
   let newResponse = response;
@@ -23,20 +28,20 @@ import { pipeSvg } from './pipes/svg.js';
     body: Buffer.from(newResponse.body),
   };
 
-  newResponse = await pipeLowercaseHeader(newResponse, request);
-  newResponse = await pipeHeadersClean(newResponse, request);
+  newResponse = await pipeLowercaseHeader(newResponse, request, config);
+  newResponse = await pipeHeadersClean(newResponse, request, config);
 
-  newResponse = await pipeCharset(newResponse, request);
+  newResponse = await pipeCharset(newResponse, request, config);
 
-  newResponse = await pipeHtml(newResponse, request);
+  newResponse = await pipeHtml(newResponse, request, config);
 
-  newResponse = await pipeImage(newResponse, request);
-  newResponse = await pipeLosslessImage(newResponse, request);
-  newResponse = await pipeSvg(newResponse, request);
+  newResponse = await pipeImage(newResponse, request, config);
+  newResponse = await pipeLosslessImage(newResponse, request, config);
+  newResponse = await pipeSvg(newResponse, request, config);
 
-  newResponse = await pipeCompress(newResponse, request);
-  newResponse = await pipeCache(newResponse, request);
-  newResponse = await pipeSaveToCache(newResponse, request);
+  newResponse = await pipeCompress(newResponse, request, config);
+  newResponse = await pipeCache(newResponse, request, config);
+  newResponse = await pipeSaveToCache(newResponse, request, config);
 
   newResponse = {
     ...newResponse,

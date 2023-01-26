@@ -3,8 +3,15 @@ const restrictedGlobals = require('confusing-browser-globals');
 
 module.exports = {
   root: true,
+  parser: '@babel/eslint-parser',
   parserOptions: {
-    ecmaVersion: 2020,
+    requireConfigFile: false,
+    babelOptions: {
+      plugins: [
+        '@babel/plugin-syntax-import-assertions',
+      ],
+    },
+    ecmaVersion: 'latest',
     sourceType: 'module',
   },
   extends: [
@@ -51,5 +58,6 @@ module.exports = {
     'import/no-cycle': 0,
     'import/extensions': [2, 'always'],
     'import/prefer-default-export': 0,
+    'unicorn/numeric-separators-style': 0,
   },
 };

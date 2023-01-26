@@ -10,29 +10,32 @@ const unlinkFile = promisify(fs.unlink);
 
 const imageMimeTypes = new Set(['image/png']);
 
-const imagemagickArguments = [
-  '-colorspace',
-  ' sRGB',
+const imagemagickArguments = (quality = '30', config = {}) => {
+  const argumentConfig = config.eink ? ['-grayscale', 'Rec709Luma'] : ['-colorspace', 'sRGB'];
 
-  '-strip',
-  '+dither',
-  '-auto-orient',
-  '-interlace',
-  'Plane',
-  '-gaussian-blur',
-  '0.01',
-  '-quality',
-  '30',
+  return [...argumentConfig,
 
-  '-define',
-  'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=20,auto-filter=true,lossless=false,method=5,thread-level=1',
-];
+    '-strip',
+    '+dither',
+    '-auto-orient',
+    '-interlace',
+    'Plane',
+    '-gaussian-blur',
+    '0.01',
+    '-quality',
+    `${quality}`,
+
+    '-define',
+    'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=20,auto-filter=true,lossless=false,method=5,thread-level=1',
+  ];
+};
 
 /**
  * @param response
  * @param request
+ * @param config
  */
-export async function pipeLosslessImage(response, request) {
+export async function pipeLosslessImage(response, request, config) {
   let newBody = await response.body;
 
   if (
@@ -49,7 +52,7 @@ export async function pipeLosslessImage(response, request) {
 
       await execa('convert', [
         fileToWrite,
-        ...imagemagickArguments,
+        ...imagemagickArguments('30', config),
         fileConverted,
       ]);
 
