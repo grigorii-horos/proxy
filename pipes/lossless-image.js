@@ -24,8 +24,8 @@ const imagemagickArguments = (quality = '30', config = {}) => {
   ];
 
   parameterArguments = config.eink
-    ? [...parameterArguments, '-grayscale', 'Rec709Luma', '-colorspace', 'gray', '-unsharp', '0x2+2+0']
-    : [...parameterArguments, '-colorspace', 'sRGB', '-unsharp', '0x2+1+0', '-gaussian-blur', '0.01'];
+    ? [...parameterArguments, '-median', '2', '-colorspace', 'gray', '-unsharp', '0x2+2+0']
+    : [...parameterArguments, '-median', '1', '-colorspace', 'sRGB', '-unsharp', '0x2+1+0', '-gaussian-blur', '0.01'];
 
   parameterArguments = [...parameterArguments,
     '-define',
