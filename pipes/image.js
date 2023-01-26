@@ -17,7 +17,7 @@ const imageMimeTypes = new Set([
 
 const imagemagickArguments = (quality = '20', config = {}) => {
   const argumentConfig = config.eink
-    ? ['-colorspace', 'gray', '-grayscale', 'Rec709Luma', '-unsharp', '0x6+3+0']
+    ? ['-colorspace', 'gray', '-grayscale', 'Rec709Luma', '-unsharp', '0x4+2+0']
     : ['-colorspace', 'sRGB', '-gaussian-blur', '0.01'];
 
   return [...argumentConfig,
@@ -61,7 +61,7 @@ export async function pipeImage(response, request, config) {
 
       await writeFile(fileToWrite, newBody);
 
-      await execa('convert', [
+      await execa('gm', ['convert',
         `${fileToWrite}[0]`,
         ...imagemagickArguments(quality, config),
         fileConverted,
