@@ -22,6 +22,7 @@ const imagemagickArguments = (quality = '30', config = {}) => {
     '-quality',
     config.eink ? '40' : `${quality}`,
 
+    '-unsharp', '0x3+1+0',
     '-define',
     'webp:image-hint=picture,alpha-compression=1,alpha-filtering=2,alpha-quality=20,auto-filter=true,lossless=false,method=5,thread-level=1',
   ];

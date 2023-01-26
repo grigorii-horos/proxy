@@ -27,6 +27,8 @@ const imagemagickArguments = (quality = '20', config = {}) => {
     '-quality',
     config.eink ? '35' : `${quality}`,
 
+    '-unsharp', '0x3+1+0',
+
     '-define',
     'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
   ];
