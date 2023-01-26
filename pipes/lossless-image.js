@@ -56,7 +56,7 @@ export async function pipeLosslessImage(response, request, config) {
       await writeFile(fileToWrite, newBody);
 
       await execa('convert', [
-        fileToWrite,
+        `${fileToWrite}[0]`,
         ...imagemagickArguments(config.eink ? '35' : '30', config),
         fileConverted,
       ]);
