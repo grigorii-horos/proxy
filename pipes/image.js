@@ -17,7 +17,7 @@ const imageMimeTypes = new Set([
 
 const imagemagickArguments = (quality = '20', config = {}) => {
   const argumentConfig = config.eink
-    ? ['-colorspace', 'gray', '-grayscale', 'Rec709Luma']
+    ? ['-colorspace', 'gray', '-grayscale', 'Rec709Luma', '-unsharp', '0x6+3+0']
     : ['-colorspace', 'sRGB', '-gaussian-blur', '0.01'];
 
   return [...argumentConfig,
@@ -26,8 +26,6 @@ const imagemagickArguments = (quality = '20', config = {}) => {
     '-auto-orient',
     '-quality',
     `${quality}`,
-
-    '-unsharp', '0x3+1+0',
 
     '-define',
     'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',

@@ -6,9 +6,9 @@ import mkdirp from 'mkdirp';
 import { promisify } from 'node:util';
 
 import lowercaseKeys from 'lowercase-keys';
-import { Worker } from 'node:worker_threads';
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+// import { Worker } from 'node:worker_threads';
+// import { dirname } from 'node:path';
+// import { fileURLToPath } from 'node:url';
 import blockUrls from './block-urls.js';
 import startWorker from './start-worker.js';
 
@@ -110,6 +110,7 @@ const options = {
 
   // silent: true,
 };
+
 const proxyServer = new anyproxy.ProxyServer(options);
 
 proxyServer.on('ready', () => {
