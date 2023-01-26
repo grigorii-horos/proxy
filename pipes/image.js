@@ -17,17 +17,15 @@ const imageMimeTypes = new Set([
 
 const imagemagickArguments = (quality = '20', config = {}) => {
   const argumentConfig = config.eink
-    ? ['-depth', '4', '-grayscale', 'Rec709Luma']
+    ? ['-colorspace', 'gray', '-grayscale', 'Rec709Luma']
     : ['-colorspace', 'sRGB', '-gaussian-blur', '0.01'];
 
   return [...argumentConfig,
     '-strip',
     '+dither',
     '-auto-orient',
-    '-interlace',
-    'Plane',
     '-quality',
-    `${quality}`,
+    config.eink ? '35' : `${quality}`,
 
     '-define',
     'webp:image-hint=photo,lossless=false,partition-limit=90,method=5,thread-level=1',
