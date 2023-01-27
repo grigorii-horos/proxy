@@ -31,7 +31,7 @@ const config = { ...defaultConfig, ...userConfig };
   newResponse = await pipeLowercaseHeader(newResponse, request, config);
   newResponse = await pipeHeadersClean(newResponse, request, config);
 
-  // newResponse = await pipeCharset(newResponse, request, config);
+  newResponse = await pipeCharset(newResponse, request, config);
 
   newResponse = await pipeHtml(newResponse, request, config);
 

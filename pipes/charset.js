@@ -3,9 +3,9 @@ import iconv from 'iconv-lite';
 
 const convertCharsetMimes = [
   'text/',
-  'application/javascript',
-  'application/x-javascript',
-  'application/json',
+  // 'application/javascript',
+  // 'application/x-javascript',
+  // 'application/json',
 ];
 
 /**
