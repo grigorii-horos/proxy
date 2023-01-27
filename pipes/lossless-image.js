@@ -17,15 +17,14 @@ const imageMimeTypes = new Set([
 const imagemagickArguments = (quality = '30', config = {}) => {
   let parameterArguments = [
     '-strip',
-    '+dither',
     '-auto-orient',
     '-quality',
     `${quality}`,
   ];
 
   parameterArguments = config.eink
-    ? [...parameterArguments, '-median', '2', '-grayscale', 'Rec709luminance', '-colorspace', 'gray', '-unsharp', '0x2+2+0']
-    : [...parameterArguments, '-median', '1', '-colorspace', 'sRGB', '-unsharp', '0x2+1+0', '-gaussian-blur', '0.01'];
+    ? [...parameterArguments, '-grayscale', 'Rec709luminance', '-colorspace', 'gray', '-unsharp', '0x2+2+0']
+    : [...parameterArguments, '-colorspace', 'sRGB', '-unsharp', '0x2+1+0', '-gaussian-blur', '0.01'];
 
   parameterArguments = [...parameterArguments,
     '-define',
@@ -57,7 +56,7 @@ export async function pipeLosslessImage(response, request, config) {
 
       await execa('convert', [
         `${fileToWrite}[0]`,
-        ...imagemagickArguments(config.eink ? '35' : '30', config),
+        ...imagemagickArguments(config.eink ? '40' : '30', config),
         fileConverted,
       ]);
 
