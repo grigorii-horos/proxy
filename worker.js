@@ -10,6 +10,7 @@ import { pipeLosslessImage } from './pipes/lossless-image.js';
 import { pipeLowercaseHeader } from './pipes/lowercase-headers.js';
 import { pipeSaveToCache } from './pipes/save-to-cache.js';
 import { pipeSvg } from './pipes/svg.js';
+import { pipeCss } from './pipes/css.js';
 
 import defaultConfig from './config.default.json' assert { type: "json" };
 import userConfig from './config.json' assert { type: "json" };
@@ -38,6 +39,7 @@ const config = { ...defaultConfig, ...userConfig };
   newResponse = await pipeImage(newResponse, request, config);
   newResponse = await pipeLosslessImage(newResponse, request, config);
   newResponse = await pipeSvg(newResponse, request, config);
+  newResponse = await pipeCss(newResponse, request, config);
 
   newResponse = await pipeCompress(newResponse, request, config);
   newResponse = await pipeCache(newResponse, request, config);

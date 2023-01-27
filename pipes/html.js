@@ -5,6 +5,7 @@ import startWorker from '../start-worker.js';
 /**
  * @param response
  * @param request
+ * @param config
  */
 export async function pipeHtml(response, request, config) {
   if (response?.header['content-type']?.startsWith('text/html')) {
@@ -17,7 +18,7 @@ export async function pipeHtml(response, request, config) {
     );
     bodyString = replaceAll(
       bodyString,
-      /(<(?:script|link).*)integrity=(:?'|")sha512-.*?(:?'|")/gm,
+      /(<(?:script|link).*)integrity=(:?'|")\w+-.*?(:?'|")/gm,
       '$1',
     );
 

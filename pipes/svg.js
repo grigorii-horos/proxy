@@ -1,55 +1,74 @@
-import { execa } from 'execa';
-import fs from 'node:fs';
-import { promisify } from 'node:util';
-
-import { temporaryFile } from 'tempy';
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const unlinkFile = promisify(fs.unlink);
-
-const svgCleanerArguments = [
-  '--remove-gradient-attributes=true',
-  '--apply-transform-to-paths=true',
-  '--coordinates-precision=5',
-  '--properties-precision=5',
-  '--transforms-precision=7',
-  '--paths-coordinates-precision=7',
-  '--multipass',
-  '--quiet',
-];
+import { optimize } from 'svgo';
 
 /**
  * @param {{ body: any; header: { [x: string]: string; }; }} response
  * @param {any} request
  */
 export async function pipeSvg(response, request) {
-  let newBody = await response.body;
+  const newBody = await response.body;
 
   if (
     response?.header['content-type']?.startsWith('image/svg+xml')
     && newBody.length > 128
   ) {
     try {
-      const fileToWrite = temporaryFile({ extension: 'svg' });
-      const fileConverted = temporaryFile({ extension: 'svg' });
+      const result = optimize(newBody, {
+        // optional but recommended field
+        // path: 'path-to.svg',
+        // all config fields are also available here
+        multipass: true,
 
-      await writeFile(fileToWrite, newBody);
+        plugins: [
+          'removeDoctype',
+          'removeXMLProcInst',
+          'removeComments',
+          'removeMetadata',
+          'removeEditorsNSData',
+          'cleanupAttrs',
+          'mergeStyles',
+          'minifyStyles',
+          // 'cleanupIDs',
+          'removeUselessDefs',
+          'cleanupNumericValues',
+          'convertColors',
+          'removeUnknownsAndDefaults',
+          'removeNonInheritableGroupAttrs',
+          'removeUselessStrokeAndFill',
+          'removeViewBox',
+          'cleanupEnableBackground',
+          'removeHiddenElems',
+          'removeEmptyText',
+          'convertShapeToPath',
+          'convertEllipseToCircle',
+          'moveElemsAttrsToGroup',
+          'moveGroupAttrsToElems',
+          'collapseGroups',
+          'convertTransform',
+          'removeEmptyAttrs',
+          'removeEmptyContainers',
+          'mergePaths',
+          'removeUnusedNS',
+          'sortDefsChildren',
+          'removeTitle',
+          'removeDesc',
+          'convertStyleToAttrs',
+          'sortAttrs',
+          'reusePaths',
+        ],
 
-      await execa('svgcleaner', [
-        fileToWrite,
-        ...svgCleanerArguments,
-        fileConverted,
-      ]);
+        js2svg: {
+          indent: 2, // string with spaces or number of spaces. 4 by default
+          pretty: false, // boolean, false by default
+        },
+      });
 
-      newBody = await readFile(fileConverted);
-
-      unlinkFile(fileToWrite);
-      unlinkFile(fileConverted);
+      if (!result.data) {
+        return result;
+      }
 
       return {
         ...response,
-        body: newBody,
+        body: result.data,
       };
     } catch {
       return response;

@@ -72,7 +72,7 @@ export async function pipeImage(response, request, config) {
       unlinkFile(fileToWrite);
       unlinkFile(fileConverted);
 
-      if (oldSize < newBody.length) {
+      if (!config.eink && oldSize < newBody.length) {
         console.log('Converted file is bigger than original');
 
         return {
