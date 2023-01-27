@@ -47,7 +47,7 @@ export async function pipeCharset(response, request) {
       : response.body;
 
     if (
-      response?.header['content-type']?.startsWith('text/html') && bodyString
+      response?.header['content-type']?.startsWith('text/html') && bodyString && bodyString.replaceAll
     ) {
       bodyString = bodyString?.replaceAll(/(<script .* src=["'])(.*)(["']>)/gm, `$1$2?charset=${charsetDetect}$3`);
     }
