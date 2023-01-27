@@ -23,7 +23,7 @@ export async function pipeCache(response) {
       header: {
         ...response.header,
         'cache-control': 'public, immutable, max-age=31536000',
-        expires: 'Sun, 03 Mar 2052 11:42:45 GMT',
+        expires: 'Sun, 03 Mar 2037 11:42:45 GMT',
       },
     };
   }
