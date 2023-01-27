@@ -49,7 +49,7 @@ export async function pipeCharset(response, request) {
     if (
       response?.header['content-type']?.startsWith('text/html')
     ) {
-      bodyString = bodyString.replaceAll(/(<script .* src=["'])(.*)(["']>)/gm, `$1$2?charset=${charsetDetect}$3`);
+      bodyString = bodyString?.replaceAll(/(<script .* src=["'])(.*)(["']>)/gm, `$1$2?charset=${charsetDetect}$3`);
     }
 
     return {
