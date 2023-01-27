@@ -3,9 +3,9 @@ import iconv from 'iconv-lite';
 
 const convertCharsetMimes = [
   'text/',
-  // 'application/javascript',
-  // 'application/x-javascript',
-  // 'application/json',
+  'application/javascript',
+  'application/x-javascript',
+  'application/json',
 ];
 
 /**
@@ -18,23 +18,39 @@ export async function pipeCharset(response, request) {
   ) {
     let charsetDetect = charset(response?.header['content-type']);
 
-    if (
-      response?.header['content-type']?.startsWith('text/html')
+    if (!charsetDetect) {
+      if (
+        response?.header['content-type']?.startsWith('text/html')
       && !response?.header['content-type'].includes(';charset=')
-    ) {
-      const match = [
-        ...response.body
-          .toString()
-          .matchAll(/<meta.*content=["'].*charset=([\w-]+)/gim),
-      ].map((m) => m[1])[0];
-      if (match) {
-        charsetDetect = match;
+      ) {
+        const match = [
+          ...response.body
+            .toString()
+            .matchAll(/<meta.*content=["'].*charset=([\w-]+)/gim),
+        ].map((m) => m[1])[0];
+        if (match) {
+          charsetDetect = match;
+        }
+      }
+
+      if (!charsetDetect && request.url.includes('?charset=')) {
+        const charsetTest = request.url.split('?charset=');
+        if (charsetTest[1]) {
+          charsetDetect = charsetTest[1];
+        }
       }
     }
 
-    const bodyString = charsetDetect && charsetDetect !== 'utf-8'
+    // eslint-disable-next-line unicorn/text-encoding-identifier-case
+    let bodyString = charsetDetect && charsetDetect !== 'utf-8'
       ? iconv.decode(response.body, charsetDetect)
       : response.body;
+
+    if (
+      response?.header['content-type']?.startsWith('text/html')
+    ) {
+      bodyString = bodyString.replaceAll(/(<script .* src=["'])(.*)(["']>)/gm, `$1$2?charset=${charsetDetect}$3`);
+    }
 
     return {
       ...response,
