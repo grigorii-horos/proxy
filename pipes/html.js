@@ -22,7 +22,7 @@ export async function pipeHtml(response, request, config) {
       '$1',
     );
 
-    const regexp = /<img\s+[^>]*?src=("|')([^"']+)\1/g;
+    const regexp = /<(?:img|source)\s+[^>]*?(?:src|srcset)=("|')([^"']+)\1/gm;
     const array = [...bodyString.matchAll(regexp)];
     if (response.statusCode >= 200 && response.statusCode <= 300) {
       const base = request.url;
