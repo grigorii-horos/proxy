@@ -57,6 +57,7 @@ export async function pipeHtml(response, request, config) {
                   header: responseImage.headers,
                   body: responseImage.data,
                 },
+                config,
               );
             } catch (error) {
               console.log(error);

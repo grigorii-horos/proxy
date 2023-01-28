@@ -16,6 +16,11 @@ const fsExistsAsync = promisify(fs.exists);
 
 const readFile = promisify(fs.readFile);
 
+const defaultConfig = await readFile('./config.default.json', 'utf8');
+const userConfig = await readFile('./config.json', 'utf8');
+
+const config = { ...JSON.parse(defaultConfig), ...JSON.parse(userConfig) };
+
 const options = {
   rule: {
     summary: 'a rule to hack response',
@@ -79,7 +84,7 @@ const options = {
 
     async beforeSendResponse(requestDetail, responseDetail) {
       return new Promise((resolve, reject) => {
-        const worker = startWorker(requestDetail, responseDetail.response);
+        const worker = startWorker(requestDetail, responseDetail.response, config);
 
         worker.on('message', (response) => {
           let newResponse = response;
@@ -104,7 +109,7 @@ const options = {
   port: 10000,
   throttle: 0,
   forceProxyHttps: true,
-  wsIntercept: true,
+  wsIntercept: false,
   silent: true,
   dangerouslyIgnoreUnauthorized: true,
 
