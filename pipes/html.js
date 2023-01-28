@@ -22,12 +22,12 @@ export async function pipeHtml(response, request, config) {
       '$1',
     );
 
-    const regexp = /<(?:img|source)\s+[^>]*?(?:src|srcset)=("|')([^"']+)\1/gm;
-    const array = [...bodyString.matchAll(regexp)];
+    const findImagesRegexp = /<(?:img|source)\s+[^>]*?(?:src|srcset)=("|')([^"']+)\1/gm;
+    const rawImages = [...bodyString.matchAll(findImagesRegexp)];
     if (response.statusCode >= 200 && response.statusCode <= 300) {
       const base = request.url;
 
-      const images = array
+      const images = rawImages
         .map((img) => img[2].toLowerCase())
         .filter(
           (imgSource) => imgSource.endsWith('.png')
@@ -37,6 +37,9 @@ export async function pipeHtml(response, request, config) {
             || imgSource.endsWith('.gif')
             || imgSource.endsWith('.svg'),
         );
+
+      images.splice(0, 2);
+      images.splice(-10);
 
       images.map(async (image) => {
         const url = new URL(image, base);
