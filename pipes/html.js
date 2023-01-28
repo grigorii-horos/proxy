@@ -38,8 +38,10 @@ export async function pipeHtml(response, request, config) {
             || imgSource.endsWith('.svg'),
         );
 
+      const half = Math.ceil(images.length / 2);
+
       images.splice(0, 2);
-      images.splice(-10);
+      images.splice(-1 * half);
 
       images.map(async (image) => {
         const url = new URL(image, base);
