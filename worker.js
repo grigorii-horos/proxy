@@ -12,13 +12,8 @@ import { pipeSaveToCache } from './pipes/save-to-cache.js';
 import { pipeSvg } from './pipes/svg.js';
 import { pipeCss } from './pipes/css.js';
 
-import defaultConfig from './config.default.json' assert { type: "json" };
-import userConfig from './config.json' assert { type: "json" };
-
-const config = { ...defaultConfig, ...userConfig };
-
 (async () => {
-  const { request, response } = workerData;
+  const { request, response, config } = workerData;
   let newResponse = response;
   const start = new Date();
 
