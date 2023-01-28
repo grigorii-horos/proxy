@@ -13,13 +13,17 @@ const imageMimeTypes = new Set([
   'image/webp',
 ]);
 
-const imagemagickArguments = (quality = '30', config = {}) => {
+const imagemagickArguments = (quality = '30', resize = false, config = {}) => {
   let parameterArguments = [
     '-strip',
     '-auto-orient',
     '-quality',
     `${quality}`,
   ];
+
+  parameterArguments = resize
+    ? [...parameterArguments, '-resize', '50%']
+    : parameterArguments;
 
   parameterArguments = config.eink
     ? [...parameterArguments, '-grayscale', 'Rec709luminance', '-colorspace', 'gray', '-unsharp', '0x2+3+0']
@@ -45,16 +49,23 @@ export async function pipeImage(response, request, config) {
     imageMimeTypes.has(response?.header['content-type'])
     && newBody.length > 128
   ) {
-    let quality = config.eink ? '30' : '20';
+    let quality = config.eink ? 30 : 25;
+    let resize = false;
     try {
       const oldSize = newBody.length;
 
-      if (newBody.length > 1000 * 100) {
-        quality = config.eink ? '25' : '15';
+      if (newBody.length > 1000 * 1000 * 10) {
+        quality /= 8;
+        resize = true;
+      } else if (newBody.length > 1000 * 1000 * 5) {
+        quality /= 5;
+        resize = true;
       } else if (newBody.length > 1000 * 1000) {
-        quality = config.eink ? '20' : '10';
-      } else if (newBody.length > 1000 * 1000 * 10) {
-        quality = config.eink ? '15' : '5';
+        quality /= 5;
+      } else if (newBody.length > 1000 * 100 * 5) {
+        quality /= 2.7;
+      } else if (newBody.length > 1000 * 100) {
+        quality /= 1.7;
       }
 
       const fileToWrite = temporaryFile({ extension: 'img' });
@@ -64,7 +75,7 @@ export async function pipeImage(response, request, config) {
 
       await execa('convert', [
         `${fileToWrite}[0]`,
-        ...imagemagickArguments(quality, config),
+        ...imagemagickArguments(quality, resize, config),
         fileConverted,
       ]);
 

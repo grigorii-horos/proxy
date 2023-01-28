@@ -14,13 +14,17 @@ const imageMimeTypes = new Set([
   'image/x-icon',
 ]);
 
-const imagemagickArguments = (quality = '30', config = {}) => {
+const imagemagickArguments = (quality = '30', resize = false, config = {}) => {
   let parameterArguments = [
     '-strip',
     '-auto-orient',
     '-quality',
     `${quality}`,
   ];
+
+  parameterArguments = resize
+    ? [...parameterArguments, '-resize', '50%']
+    : parameterArguments;
 
   parameterArguments = config.eink
     ? [...parameterArguments, '-grayscale', 'Rec709luminance', '-colorspace', 'gray', '-unsharp', '0x2+3+0']
@@ -46,8 +50,24 @@ export async function pipeLosslessImage(response, request, config) {
     imageMimeTypes.has(response?.header['content-type'])
     && newBody.length > 128
   ) {
+    let quality = config.eink ? 40 : 30;
+    let resize = false;
     try {
       const oldSize = newBody.length;
+
+      if (newBody.length > 1000 * 1000 * 10) {
+        quality /= 8;
+        resize = true;
+      } else if (newBody.length > 1000 * 1000 * 5) {
+        quality /= 5;
+        resize = true;
+      } else if (newBody.length > 1000 * 1000) {
+        quality /= 5;
+      } else if (newBody.length > 1000 * 100 * 5) {
+        quality /= 2.7;
+      } else if (newBody.length > 1000 * 100) {
+        quality /= 1.7;
+      }
 
       const fileToWrite = temporaryFile({ extension: 'img' });
       const fileConverted = temporaryFile({ extension: 'webp' });
@@ -56,7 +76,7 @@ export async function pipeLosslessImage(response, request, config) {
 
       await execa('convert', [
         `${fileToWrite}[0]`,
-        ...imagemagickArguments(config.eink ? '40' : '30', config),
+        ...imagemagickArguments(quality, resize, config),
         fileConverted,
       ]);
 
