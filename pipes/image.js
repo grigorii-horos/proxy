@@ -26,7 +26,7 @@ const imagemagickArguments = (quality = '30', resize = false, config = {}) => {
     : parameterArguments;
 
   parameterArguments = config.eink
-    ? [...parameterArguments, '-grayscale', 'Rec709luminance', '-colorspace', 'gray', '-unsharp', '0x2+3+0']
+    ? [...parameterArguments, '-colorspace', 'Gray', '-unsharp', '0x2+3+0']
     : [...parameterArguments, '-colorspace', 'sRGB', '-unsharp', '0x2+1+0', '-gaussian-blur', '0.01'];
 
   parameterArguments = [...parameterArguments,
@@ -73,7 +73,7 @@ export async function pipeImage(response, request, config) {
 
       await writeFile(fileToWrite, newBody);
 
-      await execa('convert', [
+      await execa('gm', ['convert',
         `${fileToWrite}[0]`,
         ...imagemagickArguments(quality, resize, config),
         fileConverted,
