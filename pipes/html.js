@@ -21,6 +21,20 @@ export async function pipeHtml(response, request, config) {
       /<(img|iframe)/gm,
       '<$1 loading="lazy"',
     );
+
+    if (config.eink) {
+      bodyString = replaceAll(
+        bodyString,
+        '<video',
+        '<video-disabled',
+      );
+      bodyString = replaceAll(
+        bodyString,
+        '</video',
+        '</video-disabled',
+      );
+    }
+
     bodyString = replaceAll(
       bodyString,
       /(<(?:script|link).*)integrity=(:?'|")\w+-.*?(:?'|")/gm,
