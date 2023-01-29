@@ -1,5 +1,6 @@
 import prettysize from 'prettysize';
 import { parentPort, workerData } from 'node:worker_threads';
+import crypto from 'node:crypto';
 import { pipeCache } from './pipes/cache.js';
 import { pipeCharset } from './pipes/charset.js';
 import { pipeCompress } from './pipes/compress.js';
@@ -46,6 +47,13 @@ import { pipeCss } from './pipes/css.js';
   };
   const end = Date.now() - start;
   const newSize = newResponse.body.length;
+
+  const hashFile = crypto
+    .createHash('sha1')
+    .update(request.url)
+    .digest('hex');
+  const cacheFile = `/tmp/.cache/${hashFile}`;
+
   console.log(
     request.url,
     `Execution time - ${end}ms  Compression - ${prettysize(
@@ -54,7 +62,7 @@ import { pipeCss } from './pipes/css.js';
       true,
       0,
     )}/${prettysize(newSize, true, true, 0)}`,
-    `${Math.floor(newSize / (oldSize / 100))}%`,
+    `${Math.floor(newSize / (oldSize / 100))}%  - ${cacheFile}`,
   );
 
   parentPort.postMessage(newResponse);

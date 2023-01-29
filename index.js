@@ -48,6 +48,7 @@ const options = {
         .update(requestDetail.url)
         .digest('hex');
       const cacheFile = `/tmp/.cache/${hashFile}`;
+
       if (await fsExistsAsync(cacheFile)) {
         const headers = lowercaseKeys(requestDetail.header || {});
 
@@ -68,7 +69,7 @@ const options = {
           };
         }
 
-        console.log(`Return from cache ${requestDetail.url}`);
+        console.log(`Return from cache ${requestDetail.url} - ${cacheFile}`);
 
         return {
           response: {

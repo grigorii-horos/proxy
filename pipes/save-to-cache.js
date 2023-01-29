@@ -43,7 +43,9 @@ export async function pipeSaveToCache(response, request) {
       await Promise.all([writeBody, writeMeta]);
       try {
         await fsRename(`${file}.tmp`, file);
-      } catch {}
+      } catch {
+        console.log('Can\'t save in cache');
+      }
     };
 
     try {
