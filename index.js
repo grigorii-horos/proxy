@@ -99,6 +99,14 @@ const options = {
             },
           });
         });
+
+        worker.on('error', (response) => {
+          resolve({
+            response: {
+              error: 'error',
+            },
+          });
+        });
       });
     },
   },

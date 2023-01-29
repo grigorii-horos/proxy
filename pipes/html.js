@@ -1,6 +1,11 @@
 import axios from 'axios';
 import replaceAll from 'string.prototype.replaceall';
+import fs from 'node:fs';
+import { promisify } from 'node:util';
+import crypto from 'node:crypto';
 import startWorker from '../start-worker.js';
+
+const fsExistsAsync = promisify(fs.exists);
 
 /**
  * @param response
@@ -24,6 +29,7 @@ export async function pipeHtml(response, request, config) {
 
     const findImagesRegexp = /<(?:img|source)\s+[^>]*?(?:src|srcset)=("|')([^"']+)\1/gm;
     const rawImages = [...bodyString.matchAll(findImagesRegexp)];
+
     if (response.statusCode >= 200 && response.statusCode <= 300) {
       const base = request.url;
 
@@ -40,11 +46,22 @@ export async function pipeHtml(response, request, config) {
 
       const half = Math.ceil(images.length / 2);
 
-      images.splice(0, 2);
+      images.splice(0, 5);
       images.splice(-1 * half);
 
       images.map(async (image) => {
         const url = new URL(image, base);
+
+        const hashFile = crypto
+          .createHash('sha1')
+          .update(url.href)
+          .digest('hex');
+        const cacheFile = `/tmp/.cache/${hashFile}`;
+
+        if (await fsExistsAsync(cacheFile)) {
+          return 'Already chached';
+        }
+
         try {
           const responseImage = await axios(url.href, {
             headers: request.header,
