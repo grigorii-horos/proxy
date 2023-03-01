@@ -35,7 +35,7 @@ import { pipeCss } from './pipes/css.js';
   newResponse = await pipeImage(newResponse, request, config);
   newResponse = await pipeLosslessImage(newResponse, request, config);
   newResponse = await pipeSvg(newResponse, request, config);
-  newResponse = await pipeCss(newResponse, request, config);
+  // newResponse = await pipeCss(newResponse, request, config);
 
   newResponse = await pipeCompress(newResponse, request, config);
   newResponse = await pipeCache(newResponse, request, config);

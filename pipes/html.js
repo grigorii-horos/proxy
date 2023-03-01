@@ -33,6 +33,23 @@ export async function pipeHtml(response, request, config) {
         '</video',
         '</video-disabled',
       );
+
+      bodyString = replaceAll(
+        bodyString,
+        '</head>',
+        `
+<style>
+*, *:before, *:after {
+transition-property: none !important;
+transform: none !important;
+animation: none !important;
+/* opacity: unset !important; */
+backdrop-filter: none !important;
+}
+</style>
+</head>
+`,
+      );
     }
 
     bodyString = replaceAll(
