@@ -17,7 +17,7 @@ Open __Settings__ -> __Network Settings__ -> __Manual proxy configuration__
 
 HTTP Proxy -> 127.0.0.1 10000
 
-Also use this proxy for HTTPS -> Select
+Also you can use this proxy for HTTPS -> Select
 
 ## Run Proxy
 
@@ -26,4 +26,4 @@ cd <repo>
 node index.js
 ```
 
-## Try to open some site in Firefox
+## Try to open a site in Firefox
